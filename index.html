@@ -2,49 +2,169 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pay – Assist Business Consultancy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#006EB6">
 <meta name="robots" content="noindex">
+<title>Pay – Assist Business Consultancy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --blue:#006EB6; --dark:#0A3D6B; --light:#E8F2FA; --line:#CFE2F3; --muted:#5A6B7B;
+    --blue:#006EB6; --blue-d:#005A96; --dark:#0A3D6B; --light:#E8F2FA; --line:#CFE2F3; --line2:#E3EEF8;
+    --muted:#4A5A6A; --green:#15803D; --green-bg:#DCF3E4; --red:#B91C1C; --wa:#128C4A;
   }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--light);font-family:"Segoe UI",Roboto,Arial,sans-serif;color:var(--dark)}
-  .bar{height:8px;background:var(--blue)}
-  .wrap{max-width:440px;margin:0 auto;padding:18px 16px 32px}
-  .card{background:#fff;border-radius:20px;box-shadow:0 6px 24px rgba(0,60,110,.12);overflow:hidden}
-  .logo{display:block;width:78%;max-width:300px;margin:22px auto 6px}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}
+  body{background:var(--light);font-family:Manrope,"Segoe UI",sans-serif;color:var(--dark);min-height:100vh}
+  button{font-family:inherit}
+  .bar{height:6px;background:var(--blue)}
+  .wrap{max-width:440px;margin:0 auto;padding:16px 16px 32px}
+  .card{background:#fff;border-radius:22px;box-shadow:0 6px 20px rgba(0,60,110,.08);overflow:hidden}
+
+  /* ================= ASSIST LOADER (used everywhere) ================= */
+  #loader{position:fixed;inset:0;z-index:80;background:#fff;display:flex;flex-direction:column;align-items:center;
+          justify-content:center;gap:22px;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s}
+  #loader.show{opacity:1;visibility:visible}
+  .assist{position:relative;width:min(64vw,250px);aspect-ratio:1071/201}
+  .assist img{position:absolute;top:0;height:100%;object-fit:contain;opacity:0}
+  #loader.play .assist img{animation:ltrIn .8s ease-out forwards}
+  #loader.loop .assist img{animation:ltrLoop 2.4s ease-in-out infinite}
+  @keyframes ltrIn{from{opacity:0}to{opacity:1}}
+  @keyframes ltrLoop{0%{opacity:0}22%{opacity:1}72%{opacity:1}100%{opacity:0}}
+  #loaderText{font-size:15px;font-weight:600;color:var(--dark);min-height:22px;text-align:center;padding:0 24px}
+
+  /* ================= PAGE ================= */
+  .logo{display:block;width:72%;max-width:280px;margin:22px auto 6px}
   .head{padding:6px 22px 18px;text-align:center;border-bottom:1px solid var(--line)}
-  .label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
-  .client{font-size:18px;font-weight:600;margin:0}
+  .label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px;font-weight:700}
+  .client{font-size:18px;font-weight:700;margin:0}
   .amount-box{background:var(--blue);color:#fff;text-align:center;padding:20px 16px}
-  .amount-box .label{color:#CFE6F7;margin:0 0 4px}
-  .amount{font-size:40px;font-weight:800;letter-spacing:.01em}
-  .body{padding:20px 22px 24px}
-  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border-radius:14px;
-       border:0;font-size:18px;font-weight:700;text-decoration:none;cursor:pointer}
-  .btn-main{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(0,110,182,.35)}
-  .btn-main:active{transform:scale(.98)}
-  .apps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-  .app{padding:12px 6px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--dark);
-       font-size:14px;font-weight:600;text-align:center;text-decoration:none}
-  .hint{font-size:13px;color:var(--muted);text-align:center;margin:10px 0 0}
+  .amount-box .label{color:#D6EAF8;margin:0 0 4px}
+  .amount{font-size:40px;font-weight:800}
+  .body{padding:20px 20px 24px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;padding:12px 16px;border-radius:14px;
+       border:0;font-size:16px;font-weight:700;text-decoration:none;cursor:pointer;transition:transform .12s}
+  .btn:active{transform:scale(.97)}
+  .btn svg{flex:none}
+  .btn-blue{background:var(--blue);color:#fff}
+  .btn-out{background:#fff;color:var(--blue-d);border:2px solid var(--blue)}
+  .btn-wa{background:var(--wa);color:#fff;font-size:17px}
+  .btn-red{background:#fff;color:var(--red);border:2px solid var(--red)}
+  .btn-text{background:none;color:var(--muted);font-size:15px;min-height:44px}
+
+  .apps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+  .app{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:84px;padding:10px 6px;
+       border:2px solid var(--line);border-radius:16px;background:#fff;color:var(--dark);font-size:13px;font-weight:700;text-decoration:none;
+       transition:transform .12s,border-color .2s}
+  .app:active{transform:scale(.95);border-color:var(--blue)}
+  .app .ico{width:40px;height:40px;border-radius:11px;display:none;object-fit:contain}
+  .app.has-icon .ico{display:block}
+  .hint{font-size:13px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.5}
   .qr-wrap{margin:22px auto 4px;text-align:center}
   #qr{display:inline-block;padding:12px;background:#fff;border:3px solid var(--blue);border-radius:16px}
-  #qr img,#qr canvas{display:block;width:200px!important;height:200px!important}
-  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:15px}
+  #qr img,#qr canvas{display:block;width:190px!important;height:190px!important}
+  .section{font-weight:800;margin:22px 0 4px;color:var(--blue-d);font-size:15px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-top:1px solid var(--line2);font-size:14px}
   .row span:first-child{color:var(--muted);flex:none;white-space:nowrap}
-  .row b{flex:1;text-align:right;word-break:normal;overflow-wrap:anywhere}
-  .copy{border:1px solid var(--blue);background:#fff;color:var(--blue);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:600;cursor:pointer;flex:none}
-  .section{font-weight:700;margin:22px 0 4px;color:var(--blue)}
+  .row b{flex:1;text-align:right;overflow-wrap:anywhere}
+  .copy{border:1px solid var(--blue);background:#fff;color:var(--blue-d);border-radius:8px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;flex:none}
   .foot{text-align:center;font-size:12px;color:var(--muted);margin-top:18px;line-height:1.6}
   .error{padding:30px 22px;text-align:center}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s}
+
+  /* ================= RESULT SCREENS ================= */
+  .result{display:none;padding:26px 20px 24px}
+  .result.show{display:block;animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .badge{width:80px;height:80px;margin:0 auto 10px}
+  .badge .ring{stroke-dasharray:283;stroke-dashoffset:283;animation:draw .6s .1s ease-out forwards}
+  .badge .mark{stroke-dasharray:80;stroke-dashoffset:80;animation:draw .4s .6s ease-out forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .result h2{margin:0 0 6px;font-size:23px;font-weight:800;text-align:center}
+  .ok h2{color:var(--green)} .bad h2{color:var(--red)}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 18px;line-height:1.5;text-align:center}
+  .summary{background:#fff;border:1px solid var(--line2);border-radius:18px;padding:4px 16px;margin-bottom:16px}
+  .summary .row:first-child{border-top:0}
+  .field{display:block;font-size:13px;color:var(--muted);margin:0 0 6px;font-weight:600}
+  .input{width:100%;min-height:50px;padding:12px 14px;border:2px solid var(--line);border-radius:12px;font-size:16px;font-family:inherit;color:var(--dark);margin-bottom:16px;outline:none}
+  .input:focus{border-color:var(--blue)}
+  .stack{display:grid;gap:10px}
+  .pill{display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px 14px;border-radius:12px;font-size:13px;font-weight:700}
+  .pill.done{background:var(--green-bg);color:#14532D}
+  .pill.todo{background:var(--light);color:var(--dark);border:0;width:100%;cursor:pointer;text-align:left}
+
+  /* ================= SHEETS ================= */
+  .sheet{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;justify-content:center;background:rgba(10,61,107,.5)}
+  .sheet.show{display:flex;animation:fade .2s both}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .sheet-box{background:#fff;width:100%;max-width:440px;max-height:92vh;overflow:auto;border-radius:26px 26px 0 0;
+             padding:14px 22px calc(24px + env(safe-area-inset-bottom));animation:up .35s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+  .sheet-box h3{margin:0 0 4px;font-size:20px;font-weight:800;text-align:center}
+  .sheet-box .sub{margin-bottom:16px}
+  .preview{background:var(--light);border-radius:16px;padding:14px;display:grid;gap:10px;margin-bottom:16px}
+  .preview .cap{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-d)}
+  .bubble{background:#fff;border-radius:12px 12px 12px 4px;padding:12px 14px;font-size:13px;line-height:1.6;white-space:pre-line;color:#1F2A37}
+  .file{background:#fff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:12px}
+  .pdf-ico{width:38px;height:46px;border-radius:6px;background:var(--blue);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .file b{font-size:13px;display:block}
+  .file small{font-size:12px;color:var(--muted)}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s;z-index:90;pointer-events:none}
   .toast.show{opacity:1}
+
+  /* ================= RECEIPT (rendered off-screen into the PDF) ================= */
+  #receipt{position:fixed;left:-10000px;top:0;width:794px;height:1123px;background:#fff;color:#1F2A37;font-family:Manrope,"Segoe UI",sans-serif;
+           display:flex;flex-direction:column;overflow:hidden}
+  #receipt .r-top{height:12px;background:#006EB6}
+  #receipt .r-head{padding:34px 48px 26px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;border-bottom:2px solid #006EB6}
+  #receipt .r-head img{width:270px;height:auto;display:block}
+  #receipt .r-co{text-align:right;font-size:12px;line-height:1.75;color:#3D4B59}
+  #receipt .r-co .n{font-size:13px;font-weight:800;color:#0A3D6B}
+  #receipt .r-title{padding:26px 48px 0;display:flex;justify-content:space-between;align-items:flex-end}
+  #receipt .r-title h1{margin:0;font-size:30px;font-weight:800;letter-spacing:.06em;color:#006EB6}
+  #receipt .r-title p{margin:4px 0 0;font-size:12px;color:#4A5A6A}
+  #receipt .r-meta{display:grid;grid-template-columns:auto auto;column-gap:18px;row-gap:6px;font-size:13px}
+  #receipt .r-meta span{color:#4A5A6A} #receipt .r-meta b{text-align:right}
+  #receipt .r-boxes{margin:22px 48px 0;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  #receipt .r-box{background:#E8F2FA;border-radius:12px;padding:16px 18px;font-size:13px;line-height:1.8}
+  #receipt .r-box .k{font-size:11px;font-weight:800;letter-spacing:.1em;color:#005A96}
+  #receipt .r-box .big{font-size:16px;font-weight:800;color:#0A3D6B}
+  #receipt .r-table{margin:24px 48px 0;border:1px solid #CFE2F3;border-radius:12px;overflow:hidden;font-size:13px}
+  #receipt .r-tr{display:grid;grid-template-columns:50px 1fr 160px;border-top:1px solid #E3EEF8}
+  #receipt .r-tr div{padding:11px 14px} #receipt .r-tr div:last-child{text-align:right}
+  #receipt .r-tr.h{background:#006EB6;color:#fff;font-weight:700;border-top:0}
+  #receipt .r-tr.alt{background:#F6FAFD}
+  #receipt .r-tr.t{border-top:2px solid #006EB6;background:#E8F2FA;font-weight:800;color:#0A3D6B}
+  #receipt .r-tr.t div:last-child{font-size:15px}
+  #receipt .r-words{margin:14px 48px 0;font-size:13px} #receipt .r-words span{color:#4A5A6A}
+  #receipt .r-paid{margin:30px 48px 0;display:flex;justify-content:space-between;align-items:center;gap:24px}
+  #receipt .stamp{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border:2px solid #15803D;border-radius:999px;color:#15803D;font-weight:800;font-size:14px;letter-spacing:.08em}
+  #receipt .r-note{font-size:12px;color:#4A5A6A;text-align:right;line-height:1.6;max-width:360px}
+  #receipt .r-foot{margin-top:auto;background:#006EB6;color:#fff;padding:16px 48px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;letter-spacing:.08em}
+  #receipt .r-foot img{height:22px;width:auto;display:block}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}
+    #loader .assist img{opacity:1}
+  }
 </style>
 </head>
 <body>
+
+<!-- ============ ASSIST LOADER ============ -->
+<div id="loader" class="show play" aria-live="polite">
+  <div class="assist" role="img" aria-label="ASSIST">
+    <img src="brand/a1.png" alt="" style="left:1.494%;width:20.168%">
+    <img src="brand/a2.png" alt="" style="left:21.569%;width:17.367%">
+    <img src="brand/a3.png" alt="" style="left:39.029%;width:17.460%">
+    <img src="brand/a4.png" alt="" style="left:57.796%;width:4.202%">
+    <img src="brand/a5.png" alt="" style="left:63.399%;width:17.460%">
+    <img src="brand/a6.png" alt="" style="left:80.392%;width:17.554%">
+  </div>
+  <div id="loaderText"></div>
+</div>
+
 <div class="bar"></div>
 <div class="wrap">
   <div class="card">
@@ -54,20 +174,21 @@
       <p class="client" id="client">—</p>
     </div>
 
-    <div id="content">
+    <!-- ============ PAY VIEW ============ -->
+    <div id="payView">
       <div class="amount-box">
         <p class="label">Amount to pay</p>
         <div class="amount" id="amount">—</div>
       </div>
-
       <div class="body">
-        <a class="btn btn-main" id="payBtn" href="#">Pay with UPI</a>
+        <a class="btn btn-blue" id="payBtn" href="#" data-app="your UPI app">Pay with UPI</a>
         <div class="apps">
-          <a class="app" id="gpay" href="#">GPay</a>
-          <a class="app" id="phonepe" href="#">PhonePe</a>
-          <a class="app" id="paytm" href="#">Paytm</a>
+          <a class="app" id="gpay" href="#" data-app="Google Pay"><img class="ico" alt="" data-src="icons/gpay.png"><span>Google Pay</span></a>
+          <a class="app" id="phonepe" href="#" data-app="PhonePe"><img class="ico" alt="" data-src="icons/phonepe.png"><span>PhonePe</span></a>
+          <a class="app" id="paytm" href="#" data-app="Paytm"><img class="ico" alt="" data-src="icons/paytm.png"><span>Paytm</span></a>
         </div>
-        <p class="hint">Opens your UPI app with the amount already filled in.<br>GPay, PhonePe &amp; Paytm also accept our mobile number below.</p>
+        <p class="hint">Opens your UPI app with the amount already filled in.</p>
+        <button class="btn btn-out" id="finished" type="button" style="display:none;margin-top:14px">I've finished paying</button>
 
         <div class="qr-wrap">
           <div id="qr"></div>
@@ -75,31 +196,147 @@
         </div>
 
         <p class="section">Pay by UPI ID or number</p>
-        <div class="row"><span>UPI ID</span><b id="upiText"></b><button class="copy" data-copy="upi">Copy</button></div>
-        <div class="row" id="mobRow"><span>Mobile (UPI)</span><b id="upiMob"></b><button class="copy" data-copy="mob">Copy</button></div>
+        <div class="row"><span>UPI ID</span><b id="upiText"></b><button class="copy" type="button" data-copy="upi">Copy</button></div>
+        <div class="row" id="mobRow"><span>Mobile (UPI)</span><b id="upiMob"></b><button class="copy" type="button" data-copy="mob">Copy</button></div>
 
         <div id="bankBlock">
           <p class="section">Or bank transfer</p>
           <div class="row"><span>A/c Name</span><b id="accName"></b></div>
-          <div class="row"><span>A/c No</span><b id="accNo"></b><button class="copy" data-copy="acc">Copy</button></div>
-          <div class="row"><span>IFSC</span><b id="ifsc"></b><button class="copy" data-copy="ifsc">Copy</button></div>
+          <div class="row"><span>A/c No</span><b id="accNo"></b><button class="copy" type="button" data-copy="acc">Copy</button></div>
+          <div class="row"><span>IFSC</span><b id="ifsc"></b><button class="copy" type="button" data-copy="ifsc">Copy</button></div>
           <div class="row"><span>Bank</span><b id="bank"></b></div>
         </div>
+        <button class="btn btn-out" id="bankDone" type="button" style="margin-top:16px">I've paid by bank transfer / UPI ID</button>
+      </div>
+    </div>
+
+    <!-- ============ SUCCESS ============ -->
+    <div class="result ok" id="success">
+      <div class="badge"><svg viewBox="0 0 100 100" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle class="ring" cx="50" cy="50" r="45" stroke="#15803D" stroke-width="7"/>
+        <path class="mark" d="M30 52 L44 66 L71 37" stroke="#15803D" stroke-width="8"/></svg></div>
+      <h2>Payment Successful</h2>
+      <p class="sub" id="okSub">Thank you. Your receipt is ready.</p>
+
+      <div class="summary">
+        <div class="row"><span>Receipt No.</span><b id="sNo"></b></div>
+        <div class="row"><span>Amount</span><b id="sAmt"></b></div>
+        <div class="row"><span>UPI Ref No.</span><b id="sUtr">—</b></div>
+        <div class="row"><span>Date</span><b id="sDate"></b></div>
+      </div>
+
+      <label class="field" for="utr">UPI Ref / Transaction ID (optional — shown on your receipt)</label>
+      <input class="input" id="utr" inputmode="numeric" autocomplete="off" placeholder="e.g. 428713559012">
+
+      <div class="stack">
+        <button class="btn btn-blue" id="dlBtn" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>
+          Download Receipt (PDF)</button>
+        <button class="btn btn-out" id="shareBtn" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4"/><path d="M8.2 13.2l7.6 4.4"/></svg>
+          Share Receipt</button>
+      </div>
+
+      <button class="pill todo" id="notifyTodo" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/></svg>
+        Tap to send confirmation to Assist on WhatsApp</button>
+      <div class="pill done" id="notifyDone" style="display:none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        Assist has been notified on WhatsApp</div>
+      <button class="btn btn-text" id="backOk" type="button" style="margin-top:8px">Back to payment page</button>
+    </div>
+
+    <!-- ============ FAILURE ============ -->
+    <div class="result bad" id="failure">
+      <div class="badge"><svg viewBox="0 0 100 100" fill="none" stroke-linecap="round">
+        <circle class="ring" cx="50" cy="50" r="45" stroke="#B91C1C" stroke-width="7"/>
+        <path class="mark" d="M35 35 L65 65 M65 35 L35 65" stroke="#B91C1C" stroke-width="8"/></svg></div>
+      <h2>Payment Not Completed</h2>
+      <p class="sub">No worries — if money was debited, your bank usually refunds it automatically within 2–3 working days.</p>
+      <div class="stack">
+        <button class="btn btn-blue" id="retry" type="button">Try Again</button>
+        <a class="btn btn-wa" id="waHelp" href="#" target="_blank" rel="noopener">Need help? Chat on WhatsApp</a>
       </div>
     </div>
   </div>
-  <p class="foot">After paying, please share the transaction screenshot on WhatsApp.<br>
-    Assist Business Consultancy · Accounting | Taxation | Compliance | Advisory</p>
+  <p class="foot">Payments go directly to our bank account via UPI.<br>Accounting | Taxation | Compliance | Advisory</p>
 </div>
-<div class="toast" id="toast">Copied</div>
+
+<!-- ============ DID IT GO THROUGH? ============ -->
+<div class="sheet" id="askSheet"><div class="sheet-box">
+  <div class="grab"></div>
+  <h3>Did your payment go through?</h3>
+  <p class="sub" id="askAmt"></p>
+  <div class="stack">
+    <button class="btn btn-blue" id="yes" type="button">✓ Yes, payment successful</button>
+    <button class="btn btn-red" id="no" type="button">✕ Failed / Cancelled</button>
+    <button class="btn btn-text" id="later" type="button">Not yet, I'll pay now</button>
+  </div>
+</div></div>
+
+<!-- ============ NOTIFY ASSIST ============ -->
+<div class="sheet" id="notifySheet"><div class="sheet-box">
+  <div class="grab"></div>
+  <div style="display:flex;justify-content:center;margin-bottom:8px">
+    <div class="assist" style="width:92px"><img src="brand/a1.png" alt="" style="left:1.494%;width:20.168%;opacity:1"><img src="brand/a2.png" alt="" style="left:21.569%;width:17.367%;opacity:1"><img src="brand/a3.png" alt="" style="left:39.029%;width:17.460%;opacity:1"><img src="brand/a4.png" alt="" style="left:57.796%;width:4.202%;opacity:1"><img src="brand/a5.png" alt="" style="left:63.399%;width:17.460%;opacity:1"><img src="brand/a6.png" alt="" style="left:80.392%;width:17.554%;opacity:1"></div>
+  </div>
+  <h3>Send confirmation to Assist</h3>
+  <p class="sub">So we can update your account straight away.</p>
+  <div class="preview">
+    <div class="cap">Message preview</div>
+    <div class="bubble" id="msgPreview"></div>
+    <div class="file"><div class="pdf-ico">PDF</div><div><b id="pdfName">Assist_Receipt.pdf</b><small>1 page · attached</small></div></div>
+  </div>
+  <div class="stack">
+    <button class="btn btn-wa" id="sendWa" type="button">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/><path d="M9 11.5l2 2 4-4"/></svg>
+      Send on WhatsApp</button>
+    <a class="btn btn-text" id="textOnly" href="#" target="_blank" rel="noopener">Send message only (no PDF)</a>
+  </div>
+  <p class="hint" id="sendHint">Choose <b>WhatsApp</b> → <b>Assist</b> chat, then tap Send.</p>
+</div></div>
+
+<!-- ============ RECEIPT TEMPLATE (for PDF) ============ -->
+<div id="receipt" aria-hidden="true">
+  <div class="r-top"></div>
+  <div class="r-head">
+    <img src="logo.png" alt="">
+    <div class="r-co">
+      <div class="n" id="rcName"></div>
+      <div id="rcAddr"></div>
+      <div id="rcPhones"></div>
+      <div id="rcWeb"></div>
+      <div id="rcGst"></div>
+    </div>
+  </div>
+  <div class="r-title">
+    <div><h1>PAYMENT RECEIPT</h1><p>Acknowledgement of payment received</p></div>
+    <div class="r-meta"><span>Receipt No.</span><b id="rNo"></b><span>Date</span><b id="rDate"></b></div>
+  </div>
+  <div class="r-boxes">
+    <div class="r-box"><div class="k">RECEIVED FROM</div><div class="big" id="rClient"></div><div id="rMob"></div><div id="rCgst"></div></div>
+    <div class="r-box"><div class="k">PAYMENT DETAILS</div><div>Mode: <b id="rMode">UPI</b></div><div id="rUtrLine">UPI Ref No.: <b id="rUtr"></b></div><div>Paid to: <b id="rTo"></b></div><div>Paid on: <b id="rOn"></b></div></div>
+  </div>
+  <div class="r-table" id="rTable"></div>
+  <div class="r-words"><span>Amount in words:</span> <b id="rWords"></b></div>
+  <div class="r-paid">
+    <div class="stamp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>PAID</div>
+    <div class="r-note">Subject to realisation in our account.<br>This is a computer-generated receipt and does not need a signature.</div>
+  </div>
+  <div class="r-foot"><img src="brand/assist-white.png" alt=""><div>ACCOUNTING | TAXATION | COMPLIANCE | ADVISORY</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-/* ============================================================
-   EDIT ONLY THIS BLOCK — your own payment details.
-   The UPI ID is fixed here (not taken from the link), so nobody
-   can change a link to send money to a different account.
-   ============================================================ */
+/* ==================================================================
+   EDIT ONLY THIS BLOCK — your details.
+   The UPI ID lives only here (never in the link), so nobody can
+   change a link to send money to a different account.
+   ================================================================== */
 var CONFIG = {
   upiId:       "8848838112@pthdfc",
   payeeName:   "ASSIST BUSINESS CONSULTANCY",
@@ -107,62 +344,316 @@ var CONFIG = {
   accountName: "ASSIST BUSINESS CONSULTANCY",
   accountNo:   "0984073000000239",
   ifsc:        "SIBL0000984",
-  bank:        "South Indian Bank (SIB), Kalikavu"
+  bank:        "South Indian Bank (SIB), Kalikavu",
+  whatsapp:    "918848838112",          // confirmations come to this WhatsApp (91 + number)
+
+  // ---- Receipt header ----
+  companyName: "ASSIST BUSINESS CONSULTANCY LLP",
+  address:     "",                      // e.g. "1st Floor, ABC Building, Kalikavu, Malappuram, Kerala" (empty = hidden)
+  phones:      "+91 88488 38112 · +91 62358 38112",
+  web:         "info@assistconsultancy.in · www.assistconsultancy.in",
+  gstin:       "",                      // your GSTIN (empty = hidden)
+  receiptPrefix: "AST",
+
+  // ---- Optional: automatic alert to your WhatsApp (free, CallMeBot) ----
+  // Leave empty to switch off. See HOW_TO_PUBLISH.txt for the 2-minute setup.
+  callmebotKey: ""
 };
-/* ============================================================ */
+/* ================================================================== */
 
 function $(id){ return document.getElementById(id); }
 var q = new URLSearchParams(location.search);
-var am = (q.get("am") || "").replace(/[^0-9.]/g, "");
+var amount = parseFloat((q.get("am") || "").replace(/[^0-9.]/g, ""));
 var who = (q.get("n") || "").slice(0, 60);
-var amount = parseFloat(am);
+var clientMobile = (q.get("m") || "").replace(/\D/g, "").slice(-10);
+var clientGstin = (q.get("g") || "").toUpperCase().replace(/[^0-9A-Z]/g, "").slice(0, 15);
+var items = (q.get("it") || "").split("|").map(function(s){
+  var i = s.lastIndexOf("~"); if (i < 1) return null;
+  var a = parseFloat(s.slice(i + 1)); if (isNaN(a)) return null;
+  return {d: s.slice(0, i).slice(0, 60), a: a};
+}).filter(Boolean).slice(0, 12);
 
-function inr(n){
-  return "₹" + n.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+var startedPayAt = 0, paidVia = "UPI", receipt = null, pdfFile = null, pdfUtr = null;
+
+function inr(n){ return "₹" + n.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+function num(n){ return n.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
+function show(el){ el.classList.add("show"); }
+function hide(el){ el.classList.remove("show"); }
+function toast(t){ var e = $("toast"); e.textContent = t; e.classList.add("show"); setTimeout(function(){ e.classList.remove("show"); }, 1600); }
+function wa(text){ return "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(text); }
+function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function p2(x){ return String(x).padStart(2, "0"); }
+function fmtDate(d, withTime){
+  var s = p2(d.getDate()) + "-" + MON[d.getMonth()] + "-" + d.getFullYear();
+  if (!withTime) return s;
+  var h = d.getHours(), ap = h >= 12 ? "pm" : "am"; h = h % 12 || 12;
+  return s + ", " + h + ":" + p2(d.getMinutes()) + " " + ap;
 }
 
+/* ---------------- ASSIST loader: one component for every wait ---------------- */
+var loader = $("loader");
+document.querySelectorAll("#loader .assist img").forEach(function(img, i){ img.style.animationDelay = (0.15 + i * 0.16) + "s"; });
+function showLoader(text, overlay){
+  $("loaderText").textContent = text || "";
+  loader.classList.toggle("overlay", !!overlay);
+  loader.classList.remove("play", "loop");
+  void loader.offsetWidth;                       // restart the animation
+  loader.classList.add(text ? "loop" : "play", "show");
+}
+function hideLoader(){ loader.classList.remove("show"); }
+
+/* ---------------- Amount in words (Indian system) ---------------- */
+function words(n){
+  var a = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  var b = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  function two(x){ return x < 20 ? a[x] : b[Math.floor(x/10)] + (x % 10 ? " " + a[x % 10] : ""); }
+  function three(x){ return (x >= 100 ? a[Math.floor(x/100)] + " Hundred" + (x % 100 ? " " : "") : "") + (x % 100 ? two(x % 100) : ""); }
+  var r = Math.floor(n), p = Math.round((n - r) * 100), out = [];
+  var cr = Math.floor(r / 10000000); r %= 10000000;
+  var lk = Math.floor(r / 100000);   r %= 100000;
+  var th = Math.floor(r / 1000);     r %= 1000;
+  if (cr) out.push(three(cr) + " Crore");
+  if (lk) out.push(two(lk) + " Lakh");
+  if (th) out.push(two(th) + " Thousand");
+  if (r)  out.push(three(r));
+  var s = "Rupees " + (out.join(" ") || "Zero");
+  if (p) s += " and " + two(p) + " Paise";
+  return s + " Only";
+}
+
+/* ---------------- Fill page ---------------- */
 $("client").textContent = who || "Assist Business Consultancy";
 $("upiText").textContent = CONFIG.upiId;
-$("upiMob").textContent = CONFIG.upiMobile || "";
+$("upiMob").textContent = CONFIG.upiMobile;
 if (!CONFIG.upiMobile) $("mobRow").style.display = "none";
-$("accName").textContent = CONFIG.accountName;
-$("accNo").textContent = CONFIG.accountNo;
-$("ifsc").textContent = CONFIG.ifsc;
-$("bank").textContent = CONFIG.bank;
+$("accName").textContent = CONFIG.accountName; $("accNo").textContent = CONFIG.accountNo;
+$("ifsc").textContent = CONFIG.ifsc; $("bank").textContent = CONFIG.bank;
 if (!CONFIG.accountNo) $("bankBlock").style.display = "none";
 
-if (!(amount > 0)) {
-  $("content").innerHTML = '<div class="error"><p class="section">This payment link is incomplete.</p>' +
-    '<p class="hint">Please contact Assist Business Consultancy for the correct link.<br>UPI ID: ' +
-    CONFIG.upiId + '</p></div>';
-} else {
-  var params = "pa=" + encodeURIComponent(CONFIG.upiId).replace(/%40/g, "@") +
-               "&pn=" + encodeURIComponent(CONFIG.payeeName) +
-               "&am=" + amount.toFixed(2) +
-               "&cu=INR" +
-               "&tn=" + encodeURIComponent(("Fee - " + (who || "Client")).slice(0, 40));
-  var upi = "upi://pay?" + params;
+// Real app icons: shown when icons/gpay.png etc. are uploaded
+document.querySelectorAll(".app .ico").forEach(function(img){
+  img.onload = function(){ img.parentNode.classList.add("has-icon"); };
+  img.src = img.dataset.src;
+});
 
+if (!(amount > 0)) {
+  $("payView").innerHTML = '<div class="error"><p class="section">This payment link is incomplete.</p><p class="hint">Please contact Assist Business Consultancy for the correct link.<br>UPI ID: ' + CONFIG.upiId + '</p></div>';
+} else {
+  var params = "pa=" + encodeURIComponent(CONFIG.upiId).replace(/%40/g, "@") + "&pn=" + encodeURIComponent(CONFIG.payeeName) +
+               "&am=" + amount.toFixed(2) + "&cu=INR&tn=" + encodeURIComponent(("Fee - " + (who || "Client")).slice(0, 40));
+  var upi = "upi://pay?" + params;
   $("amount").textContent = inr(amount);
   $("payBtn").textContent = "Pay " + inr(amount);
   $("payBtn").href = upi;
   $("gpay").href = "tez://upi/pay?" + params;
   $("phonepe").href = "phonepe://pay?" + params;
   $("paytm").href = "paytmmp://pay?" + params;
-
-  try { new QRCode($("qr"), {text: upi, width: 200, height: 200, colorDark: "#0A3D6B", colorLight: "#ffffff",
-                             correctLevel: QRCode.CorrectLevel.M}); }
+  $("askAmt").textContent = inr(amount) + " to " + CONFIG.payeeName;
+  try { new QRCode($("qr"), {text: upi, width: 190, height: 190, colorDark: "#0A3D6B", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M}); }
   catch (e) { $("qr").parentNode.style.display = "none"; }
 }
 
+/* ---------------- Pay → loader → back → ask ---------------- */
+document.querySelectorAll("#payBtn, .app").forEach(function(a){
+  a.addEventListener("click", function(){
+    startedPayAt = Date.now(); paidVia = "UPI";
+    showLoader("Opening " + (a.dataset.app || "your UPI app") + "…", true);
+    $("finished").style.display = "flex";
+    setTimeout(hideLoader, 3500);                 // app not installed / desktop: don't trap the client
+  });
+});
+document.addEventListener("visibilitychange", function(){
+  if (document.visibilityState === "visible" && startedPayAt && !receipt && Date.now() - startedPayAt > 2500) {
+    hideLoader(); show($("askSheet"));
+  }
+});
+$("finished").addEventListener("click", function(){ show($("askSheet")); });
+$("bankDone").addEventListener("click", function(){ paidVia = "Bank transfer / UPI"; show($("askSheet")); });
+$("later").addEventListener("click", function(){ hide($("askSheet")); startedPayAt = 0; });
+
+/* ---------------- Success ---------------- */
+function makeReceiptNo(d){
+  return CONFIG.receiptPrefix + "/" + p2(d.getDate()) + p2(d.getMonth() + 1) + String(d.getFullYear()).slice(2) + "/" +
+         p2(d.getHours()) + p2(d.getMinutes()) + "-" + p2(Math.floor(Math.random() * 100));
+}
+
+function messageText(){
+  var utr = $("utr").value.trim();
+  return "✅ *Payment Done*\n" +
+         "Name: " + (who || "-") + "\n" +
+         "Amount: " + inr(amount) + "\n" +
+         (utr ? "UPI Ref No.: " + utr + "\n" : "") +
+         "Receipt No.: " + receipt.no + "\n" +
+         "Date: " + fmtDate(receipt.date, true) + "\n\n" +
+         "Please update my account. Thank you.";
+}
+
+function fillReceipt(){
+  var utr = $("utr").value.trim();
+  $("rcName").textContent = CONFIG.companyName;
+  $("rcAddr").textContent = CONFIG.address; $("rcAddr").style.display = CONFIG.address ? "" : "none";
+  $("rcPhones").textContent = CONFIG.phones;
+  $("rcWeb").textContent = CONFIG.web;
+  $("rcGst").textContent = CONFIG.gstin ? "GSTIN: " + CONFIG.gstin : ""; $("rcGst").style.display = CONFIG.gstin ? "" : "none";
+  $("rNo").textContent = receipt.no;
+  $("rDate").textContent = fmtDate(receipt.date, false);
+  $("rClient").textContent = who || "Client";
+  $("rMob").textContent = clientMobile ? "Mobile: +91 " + clientMobile.replace(/(\d{5})(\d{5})/, "$1 $2") : "";
+  $("rCgst").textContent = clientGstin ? "GSTIN: " + clientGstin : "";
+  $("rMode").textContent = paidVia;
+  $("rUtr").textContent = utr; $("rUtrLine").style.display = utr ? "" : "none";
+  $("rTo").textContent = CONFIG.upiId;
+  $("rOn").textContent = fmtDate(receipt.date, true);
+  var lines = items.length ? items : [{d: "Professional fees / payment towards account", a: amount}];
+  var html = '<div class="r-tr h"><div>#</div><div>Particulars</div><div>Amount (₹)</div></div>';
+  lines.forEach(function(it, i){
+    html += '<div class="r-tr' + (i % 2 ? " alt" : "") + '"><div>' + (i + 1) + '</div><div></div><div>' + num(it.a) + '</div></div>';
+  });
+  html += '<div class="r-tr t"><div></div><div>Total Amount Received</div><div>' + num(amount) + '</div></div>';
+  $("rTable").innerHTML = html;
+  // descriptions set as text (never as HTML) so link contents can't inject markup
+  var rows = $("rTable").querySelectorAll(".r-tr:not(.h):not(.t)");
+  lines.forEach(function(it, i){ rows[i].children[1].textContent = it.d; });
+  $("rWords").textContent = words(amount);
+}
+
+async function buildPdf(){
+  fillReceipt();
+  if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+  var canvas = await html2canvas($("receipt"), {scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false,
+                                                 x: 0, y: 0, width: 794, height: 1123, windowWidth: 794,
+                                                 onclone: function(doc){ var r = doc.getElementById("receipt"); r.style.left = "0"; }});
+  var pdf = new window.jspdf.jsPDF({orientation: "p", unit: "pt", format: "a4"});
+  pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 595.28, 841.89);
+  var name = "Assist_Receipt_" + receipt.no.replace(/\//g, "-") + ".pdf";
+  pdfFile = new File([pdf.output("blob")], name, {type: "application/pdf"});
+  pdfUtr = $("utr").value.trim();
+  $("pdfName").textContent = name;
+  return pdfFile;
+}
+
+async function ensurePdf(){
+  if (pdfFile && pdfUtr === $("utr").value.trim()) return pdfFile;
+  showLoader("Preparing your receipt…", true);
+  try { var f = await buildPdf(); await sleep(400); return f; }
+  catch (e) { toast("Could not create the PDF. Please try again."); throw e; }
+  finally { hideLoader(); }
+}
+
+function markNotified(){
+  $("notifyTodo").style.display = "none";
+  $("notifyDone").style.display = "flex";
+}
+
+async function autoAlert(){
+  if (!CONFIG.callmebotKey) return false;
+  try {
+    var url = "https://api.callmebot.com/whatsapp.php?phone=" + CONFIG.whatsapp +
+              "&text=" + encodeURIComponent(messageText() + "\n\n(Auto-alert from payment page)") + "&apikey=" + encodeURIComponent(CONFIG.callmebotKey);
+    await fetch(url, {mode: "no-cors"});
+    return true;
+  } catch (e) { return false; }
+}
+
+$("yes").addEventListener("click", async function(){
+  hide($("askSheet"));
+  receipt = {no: makeReceiptNo(new Date()), date: new Date()};
+  $("okSub").textContent = "Thank you" + (who ? ", " + who : "") + ". Your receipt is ready.";
+  $("sNo").textContent = receipt.no;
+  $("sAmt").textContent = inr(amount);
+  $("sDate").textContent = fmtDate(receipt.date, true);
+
+  showLoader("Preparing your receipt…", true);
+  try { await buildPdf(); } catch (e) {}
+  await sleep(700);
+  if (CONFIG.callmebotKey) {
+    $("loaderText").textContent = "Notifying Assist…";
+    if (await autoAlert()) markNotified();
+    await sleep(600);
+  }
+  hideLoader();
+  $("payView").style.display = "none"; hide($("failure")); show($("success"));
+  window.scrollTo({top: 0, behavior: "smooth"});
+  setTimeout(openNotify, 900);
+});
+
+$("utr").addEventListener("input", function(){ $("sUtr").textContent = $("utr").value.trim() || "—"; });
+
+function openNotify(){
+  var pv = $("msgPreview"); pv.textContent = "";
+  messageText().split(/(\*[^*]+\*)/).forEach(function(part){
+    if (/^\*[^*]+\*$/.test(part)) { var b = document.createElement("b"); b.textContent = part.slice(1, -1); pv.appendChild(b); }
+    else pv.appendChild(document.createTextNode(part));
+  });
+  $("textOnly").href = wa(messageText());
+  var canFiles = !!(navigator.canShare && pdfFile && navigator.canShare({files: [pdfFile]}));
+  $("sendHint").innerHTML = canFiles ? "Choose <b>WhatsApp</b> → <b>Assist</b> chat, then tap Send."
+                                     : "WhatsApp opens with the message ready — tap Send. Your receipt PDF is saved so you can attach it.";
+  show($("notifySheet"));
+}
+$("notifyTodo").addEventListener("click", openNotify);
+$("notifySheet").addEventListener("click", function(e){ if (e.target === this) hide(this); });
+$("askSheet").addEventListener("click", function(e){ if (e.target === this) hide(this); });
+
+$("sendWa").addEventListener("click", async function(){
+  var f;
+  try { f = await ensurePdf(); } catch (e) { return; }
+  var text = messageText();
+  if (navigator.canShare && navigator.canShare({files: [f]})) {
+    try {
+      await navigator.share({files: [f], text: text, title: "Payment confirmation"});
+      hide($("notifySheet")); markNotified(); toast("Thank you! Confirmation sent.");
+      return;
+    } catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  downloadFile(f);
+  window.open(wa(text), "_blank");
+  hide($("notifySheet")); markNotified();
+});
+$("textOnly").addEventListener("click", function(){ $("textOnly").href = wa(messageText()); hide($("notifySheet")); markNotified(); });
+
+function downloadFile(f){
+  var u = URL.createObjectURL(f), a = document.createElement("a");
+  a.href = u; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(u); }, 4000);
+}
+$("dlBtn").addEventListener("click", async function(){
+  try { downloadFile(await ensurePdf()); toast("Receipt downloaded"); } catch (e) {}
+});
+$("shareBtn").addEventListener("click", async function(){
+  var f; try { f = await ensurePdf(); } catch (e) { return; }
+  if (navigator.canShare && navigator.canShare({files: [f]})) {
+    try { await navigator.share({files: [f], title: "Payment receipt"}); } catch (e) {}
+  } else { downloadFile(f); toast("Receipt downloaded — share it from your files"); }
+});
+$("backOk").addEventListener("click", function(){ hide($("success")); $("payView").style.display = ""; startedPayAt = 0; });
+
+/* ---------------- Failure ---------------- */
+$("no").addEventListener("click", function(){
+  hide($("askSheet"));
+  $("waHelp").href = wa("Hi, I tried to pay " + inr(amount) + " for " + (who || "my account") + " but the payment did not go through. Please help.");
+  $("payView").style.display = "none"; hide($("success")); show($("failure"));
+  window.scrollTo({top: 0, behavior: "smooth"});
+});
+$("retry").addEventListener("click", function(){ hide($("failure")); $("payView").style.display = ""; startedPayAt = 0; });
+
+/* ---------------- Copy ---------------- */
 document.querySelectorAll(".copy").forEach(function(b){
   b.addEventListener("click", function(){
     var v = {upi: CONFIG.upiId, mob: CONFIG.upiMobile, acc: CONFIG.accountNo, ifsc: CONFIG.ifsc}[b.dataset.copy] || "";
-    (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(function(){
-      var t = $("toast"); t.classList.add("show"); setTimeout(function(){ t.classList.remove("show"); }, 1200);
-    }).catch(function(){ prompt("Copy:", v); });
+    (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(function(){ toast("Copied"); })
+      .catch(function(){ prompt("Copy:", v); });
   });
 });
+
+/* ---------------- Opening: ASSIST fade, then reveal ---------------- */
+var t0 = Date.now(), opened = false;
+function revealPage(){ if (opened) return; opened = true; hideLoader(); }
+function onReady(){ setTimeout(revealPage, Math.max(0, 2300 - (Date.now() - t0))); }
+if (document.readyState === "complete") onReady(); else window.addEventListener("load", onReady);
+setTimeout(revealPage, 5000);
+loader.addEventListener("click", function(){ if (!opened) revealPage(); });
 </script>
 </body>
 </html>

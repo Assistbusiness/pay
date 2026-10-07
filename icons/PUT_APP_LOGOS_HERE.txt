@@ -1,0 +1,11 @@
+Put the official app logos in this folder with EXACTLY these names:
+
+    gpay.png      (Google Pay logo)
+    phonepe.png   (PhonePe logo)
+    paytm.png     (Paytm logo)
+
+- PNG with a transparent or white background works best (wide logos are fine).
+- Download them from each company's official brand / press page.
+- If a file is missing, that button simply shows the app's name instead.
+
+Upload this whole "icons" folder to GitHub along with index.html and logo.png.
