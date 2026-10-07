@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pay – Assist Business Consultancy</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --blue:#006EB6; --dark:#0A3D6B; --light:#E8F2FA; --line:#CFE2F3; --muted:#5A6B7B;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--light);font-family:"Segoe UI",Roboto,Arial,sans-serif;color:var(--dark)}
+  .bar{height:8px;background:var(--blue)}
+  .wrap{max-width:440px;margin:0 auto;padding:18px 16px 32px}
+  .card{background:#fff;border-radius:20px;box-shadow:0 6px 24px rgba(0,60,110,.12);overflow:hidden}
+  .logo{display:block;width:78%;max-width:300px;margin:22px auto 6px}
+  .head{padding:6px 22px 18px;text-align:center;border-bottom:1px solid var(--line)}
+  .label{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 4px}
+  .client{font-size:18px;font-weight:600;margin:0}
+  .amount-box{background:var(--blue);color:#fff;text-align:center;padding:20px 16px}
+  .amount-box .label{color:#CFE6F7;margin:0 0 4px}
+  .amount{font-size:40px;font-weight:800;letter-spacing:.01em}
+  .body{padding:20px 22px 24px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:16px;border-radius:14px;
+       border:0;font-size:18px;font-weight:700;text-decoration:none;cursor:pointer}
+  .btn-main{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(0,110,182,.35)}
+  .btn-main:active{transform:scale(.98)}
+  .apps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+  .app{padding:12px 6px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--dark);
+       font-size:14px;font-weight:600;text-align:center;text-decoration:none}
+  .hint{font-size:13px;color:var(--muted);text-align:center;margin:10px 0 0}
+  .qr-wrap{margin:22px auto 4px;text-align:center}
+  #qr{display:inline-block;padding:12px;background:#fff;border:3px solid var(--blue);border-radius:16px}
+  #qr img,#qr canvas{display:block;width:200px!important;height:200px!important}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:15px}
+  .row span:first-child{color:var(--muted);flex:none;white-space:nowrap}
+  .row b{flex:1;text-align:right;word-break:normal;overflow-wrap:anywhere}
+  .copy{border:1px solid var(--blue);background:#fff;color:var(--blue);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:600;cursor:pointer;flex:none}
+  .section{font-weight:700;margin:22px 0 4px;color:var(--blue)}
+  .foot{text-align:center;font-size:12px;color:var(--muted);margin-top:18px;line-height:1.6}
+  .error{padding:30px 22px;text-align:center}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<div class="wrap">
+  <div class="card">
+    <img class="logo" src="logo.png" alt="Assist Business Consultancy">
+    <div class="head">
+      <p class="label">Payment for</p>
+      <p class="client" id="client">—</p>
+    </div>
+
+    <div id="content">
+      <div class="amount-box">
+        <p class="label">Amount to pay</p>
+        <div class="amount" id="amount">—</div>
+      </div>
+
+      <div class="body">
+        <a class="btn btn-main" id="payBtn" href="#">Pay with UPI</a>
+        <div class="apps">
+          <a class="app" id="gpay" href="#">GPay</a>
+          <a class="app" id="phonepe" href="#">PhonePe</a>
+          <a class="app" id="paytm" href="#">Paytm</a>
+        </div>
+        <p class="hint">Opens your UPI app with the amount already filled in.<br>GPay, PhonePe &amp; Paytm also accept our mobile number below.</p>
+
+        <div class="qr-wrap">
+          <div id="qr"></div>
+          <p class="hint">On a computer? Scan this with your phone.</p>
+        </div>
+
+        <p class="section">Pay by UPI ID or number</p>
+        <div class="row"><span>UPI ID</span><b id="upiText"></b><button class="copy" data-copy="upi">Copy</button></div>
+        <div class="row" id="mobRow"><span>Mobile (UPI)</span><b id="upiMob"></b><button class="copy" data-copy="mob">Copy</button></div>
+
+        <div id="bankBlock">
+          <p class="section">Or bank transfer</p>
+          <div class="row"><span>A/c Name</span><b id="accName"></b></div>
+          <div class="row"><span>A/c No</span><b id="accNo"></b><button class="copy" data-copy="acc">Copy</button></div>
+          <div class="row"><span>IFSC</span><b id="ifsc"></b><button class="copy" data-copy="ifsc">Copy</button></div>
+          <div class="row"><span>Bank</span><b id="bank"></b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="foot">After paying, please share the transaction screenshot on WhatsApp.<br>
+    Assist Business Consultancy · Accounting | Taxation | Compliance | Advisory</p>
+</div>
+<div class="toast" id="toast">Copied</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ============================================================
+   EDIT ONLY THIS BLOCK — your own payment details.
+   The UPI ID is fixed here (not taken from the link), so nobody
+   can change a link to send money to a different account.
+   ============================================================ */
+var CONFIG = {
+  upiId:       "8848838112@pthdfc",
+  payeeName:   "ASSIST BUSINESS CONSULTANCY",
+  upiMobile:   "8848838112",
+  accountName: "ASSIST BUSINESS CONSULTANCY",
+  accountNo:   "0984073000000239",
+  ifsc:        "SIBL0000984",
+  bank:        "South Indian Bank (SIB), Kalikavu"
+};
+/* ============================================================ */
+
+function $(id){ return document.getElementById(id); }
+var q = new URLSearchParams(location.search);
+var am = (q.get("am") || "").replace(/[^0-9.]/g, "");
+var who = (q.get("n") || "").slice(0, 60);
+var amount = parseFloat(am);
+
+function inr(n){
+  return "₹" + n.toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+$("client").textContent = who || "Assist Business Consultancy";
+$("upiText").textContent = CONFIG.upiId;
+$("upiMob").textContent = CONFIG.upiMobile || "";
+if (!CONFIG.upiMobile) $("mobRow").style.display = "none";
+$("accName").textContent = CONFIG.accountName;
+$("accNo").textContent = CONFIG.accountNo;
+$("ifsc").textContent = CONFIG.ifsc;
+$("bank").textContent = CONFIG.bank;
+if (!CONFIG.accountNo) $("bankBlock").style.display = "none";
+
+if (!(amount > 0)) {
+  $("content").innerHTML = '<div class="error"><p class="section">This payment link is incomplete.</p>' +
+    '<p class="hint">Please contact Assist Business Consultancy for the correct link.<br>UPI ID: ' +
+    CONFIG.upiId + '</p></div>';
+} else {
+  var params = "pa=" + encodeURIComponent(CONFIG.upiId).replace(/%40/g, "@") +
+               "&pn=" + encodeURIComponent(CONFIG.payeeName) +
+               "&am=" + amount.toFixed(2) +
+               "&cu=INR" +
+               "&tn=" + encodeURIComponent(("Fee - " + (who || "Client")).slice(0, 40));
+  var upi = "upi://pay?" + params;
+
+  $("amount").textContent = inr(amount);
+  $("payBtn").textContent = "Pay " + inr(amount);
+  $("payBtn").href = upi;
+  $("gpay").href = "tez://upi/pay?" + params;
+  $("phonepe").href = "phonepe://pay?" + params;
+  $("paytm").href = "paytmmp://pay?" + params;
+
+  try { new QRCode($("qr"), {text: upi, width: 200, height: 200, colorDark: "#0A3D6B", colorLight: "#ffffff",
+                             correctLevel: QRCode.CorrectLevel.M}); }
+  catch (e) { $("qr").parentNode.style.display = "none"; }
+}
+
+document.querySelectorAll(".copy").forEach(function(b){
+  b.addEventListener("click", function(){
+    var v = {upi: CONFIG.upiId, mob: CONFIG.upiMobile, acc: CONFIG.accountNo, ifsc: CONFIG.ifsc}[b.dataset.copy] || "";
+    (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(function(){
+      var t = $("toast"); t.classList.add("show"); setTimeout(function(){ t.classList.remove("show"); }, 1200);
+    }).catch(function(){ prompt("Copy:", v); });
+  });
+});
+</script>
+</body>
+</html>
