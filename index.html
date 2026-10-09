@@ -60,6 +60,31 @@
   .app .ico{width:40px;height:40px;border-radius:11px;display:none;object-fit:contain}
   .app.has-icon .ico{display:block}
   .hint{font-size:13px;color:var(--muted);text-align:center;margin:10px 0 0;line-height:1.5}
+  .step{display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--line2)}
+  .step:first-of-type{border-top:0}
+  .num{flex:none;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .step-body{flex:1;min-width:0;display:grid;gap:8px}
+  .step-body>b{font-size:15px;padding-top:5px}
+  .muted{font-size:13px;color:var(--muted);line-height:1.5}
+  .step .row:first-of-type{border-top:0}
+  .step .row{flex-wrap:wrap;row-gap:2px}
+  .step .row span:first-child{width:100%;font-size:12px}
+  .step .row b{text-align:left;font-size:16px;overflow-wrap:normal;white-space:nowrap}
+  .step .row .copy{margin-left:auto}
+  .works{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:2px}
+  .works-t{font-size:12px;color:var(--muted)}
+  .app-ico{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--dark)}
+  .app-ico .ico{width:26px;height:26px;border-radius:7px;object-fit:contain;display:none}
+  .app-ico.has-icon .ico{display:block}
+  .app-ico.has-icon em{display:none}
+  .app-ico em{font-style:normal;background:var(--light);padding:4px 8px;border-radius:8px}
+  .alt{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:0 14px}
+  .alt summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:700;color:var(--blue-d);font-size:14px;display:flex;justify-content:space-between;align-items:center}
+  .alt summary::-webkit-details-marker{display:none}
+  .alt summary::after{content:"+";font-size:20px;font-weight:600}
+  .alt[open] summary::after{content:"–"}
+  .alt[open]{padding-bottom:14px}
+  .btn.done{background:#15803D}
   .qr-wrap{margin:22px auto 4px;text-align:center}
   #qr{display:inline-block;padding:12px;background:#fff;border:3px solid var(--blue);border-radius:16px}
   #qr img,#qr canvas{display:block;width:190px!important;height:190px!important}
@@ -181,32 +206,61 @@
         <div class="amount" id="amount">—</div>
       </div>
       <div class="body">
-        <a class="btn btn-blue" id="payBtn" href="#" data-app="your UPI app">Pay with UPI</a>
-        <div class="apps">
-          <a class="app" id="gpay" href="#" data-app="Google Pay"><img class="ico" alt="" data-src="icons/gpay.png"><span>Google Pay</span></a>
-          <a class="app" id="phonepe" href="#" data-app="PhonePe"><img class="ico" alt="" data-src="icons/phonepe.png"><span>PhonePe</span></a>
-          <a class="app" id="paytm" href="#" data-app="Paytm"><img class="ico" alt="" data-src="icons/paytm.png"><span>Paytm</span></a>
-        </div>
-        <p class="hint">Opens your UPI app with the amount already filled in.</p>
-        <button class="btn btn-out" id="finished" type="button" style="display:none;margin-top:14px">I've finished paying</button>
+        <p class="section" style="margin-top:0">Pay in 3 easy steps</p>
 
-        <div class="qr-wrap">
-          <div id="qr"></div>
-          <p class="hint">On a computer? Scan this with your phone.</p>
+        <div class="step">
+          <div class="num">1</div>
+          <div class="step-body">
+            <b>Copy the amount</b>
+            <button class="btn btn-blue" id="copyAmt" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
+              <span id="copyAmtText">Copy amount</span></button>
+          </div>
         </div>
 
-        <p class="section">Pay by UPI ID or number</p>
-        <div class="row"><span>UPI ID</span><b id="upiText"></b><button class="copy" type="button" data-copy="upi">Copy</button></div>
-        <div class="row" id="mobRow"><span>Mobile (UPI)</span><b id="upiMob"></b><button class="copy" type="button" data-copy="mob">Copy</button></div>
+        <div class="step">
+          <div class="num">2</div>
+          <div class="step-body">
+            <b>Pay in any UPI app</b>
+            <span class="muted">Open GPay, PhonePe, Paytm or your bank app → <b>Pay to UPI ID / mobile</b> → paste the amount.</span>
+            <div class="row"><span>UPI ID</span><b id="upiText"></b><button class="copy" type="button" data-copy="upi">Copy</button></div>
+            <div class="row" id="mobRow"><span>Mobile number (UPI)</span><b id="upiMob"></b><button class="copy" type="button" data-copy="mob">Copy</button></div>
+            <div class="works">
+              <span class="works-t">Works with</span>
+              <span class="app-ico"><img class="ico" alt="Google Pay" data-src="icons/gpay.png"><em>GPay</em></span>
+              <span class="app-ico"><img class="ico" alt="PhonePe" data-src="icons/phonepe.png"><em>PhonePe</em></span>
+              <span class="app-ico"><img class="ico" alt="Paytm" data-src="icons/paytm.png"><em>Paytm</em></span>
+            </div>
+          </div>
+        </div>
 
-        <div id="bankBlock">
-          <p class="section">Or bank transfer</p>
+        <div class="step">
+          <div class="num">3</div>
+          <div class="step-body">
+            <b>Come back and get your receipt</b>
+            <button class="btn btn-out" id="paidBtn" type="button">I've paid — get my receipt</button>
+          </div>
+        </div>
+
+        <details class="alt" id="qrAlt">
+          <summary>Prefer to scan? Show QR code</summary>
+          <div class="qr-wrap">
+            <div id="qr"></div>
+            <p class="hint">On a computer, scan with your phone.<br>On this phone: <b>Save QR</b>, then use <b>“Scan from gallery”</b> in your UPI app.</p>
+            <button class="btn btn-out" id="saveQr" type="button" style="margin-top:12px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>
+              Save QR</button>
+          </div>
+        </details>
+
+        <details class="alt" id="bankBlock">
+          <summary>Pay by bank transfer (NEFT / IMPS)</summary>
           <div class="row"><span>A/c Name</span><b id="accName"></b></div>
           <div class="row"><span>A/c No</span><b id="accNo"></b><button class="copy" type="button" data-copy="acc">Copy</button></div>
           <div class="row"><span>IFSC</span><b id="ifsc"></b><button class="copy" type="button" data-copy="ifsc">Copy</button></div>
           <div class="row"><span>Bank</span><b id="bank"></b></div>
-        </div>
-        <button class="btn btn-out" id="bankDone" type="button" style="margin-top:16px">I've paid by bank transfer / UPI ID</button>
+          <button class="btn btn-out" id="bankDone" type="button" style="margin-top:12px">I've paid by bank transfer</button>
+        </details>
       </div>
     </div>
 
@@ -438,7 +492,7 @@ $("ifsc").textContent = CONFIG.ifsc; $("bank").textContent = CONFIG.bank;
 if (!CONFIG.accountNo) $("bankBlock").style.display = "none";
 
 // Real app icons: shown when icons/gpay.png etc. are uploaded
-document.querySelectorAll(".app .ico").forEach(function(img){
+document.querySelectorAll(".app-ico .ico").forEach(function(img){
   img.onload = function(){ img.parentNode.classList.add("has-icon"); };
   img.src = img.dataset.src;
 });
@@ -453,32 +507,53 @@ if (!(amount > 0)) {
                "&am=" + amount.toFixed(2) + "&cu=INR&tn=" + encodeURIComponent(("Fee - " + (who || "Client")).slice(0, 40));
   var upi = "upi://pay?" + params;
   $("amount").textContent = inr(amount);
-  $("payBtn").textContent = "Pay " + inr(amount);
-  $("payBtn").href = upi;
-  $("gpay").href = "tez://upi/pay?" + params;
-  $("phonepe").href = "phonepe://pay?" + params;
-  $("paytm").href = "paytmmp://pay?" + params;
+  $("copyAmtText").textContent = "Copy " + inr(amount);
   $("askAmt").textContent = inr(amount) + " to " + CONFIG.payeeName;
   try { new QRCode($("qr"), {text: upi, width: 190, height: 190, colorDark: "#0A3D6B", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M}); }
-  catch (e) { $("qr").parentNode.style.display = "none"; }
+  catch (e) { $("qrAlt").style.display = "none"; }
 }
 
-/* ---------------- Pay → loader → back → ask ---------------- */
-document.querySelectorAll("#payBtn, .app").forEach(function(a){
-  a.addEventListener("click", function(){
-    startedPayAt = Date.now(); paidVia = "UPI";
-    showLoader("Opening " + (a.dataset.app || "your UPI app") + "…", true);
-    $("finished").style.display = "flex";
-    setTimeout(hideLoader, 3500);                 // app not installed / desktop: don't trap the client
+/* ---------------- Copy / save → client leaves for UPI app → comes back → ask ---------------- */
+function copyText(v, msg){
+  return (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject())
+    .then(function(){ toast(msg || "Copied"); return true; })
+    .catch(function(){ prompt("Copy:", v); return true; });
+}
+function armReturn(){ startedPayAt = Date.now(); }
+
+$("copyAmt").addEventListener("click", function(){
+  copyText(amount.toFixed(2), "Amount copied — now open your UPI app").then(function(){
+    $("copyAmt").classList.add("done"); $("copyAmtText").textContent = "Copied ✓ " + inr(amount);
+    armReturn();
   });
 });
+
+$("saveQr").addEventListener("click", function(){
+  var src = $("qr").querySelector("canvas"), img = $("qr").querySelector("img");
+  var c = document.createElement("canvas"), pad = 40, w = 520, h = 640, ctx = c.getContext("2d");
+  c.width = w; c.height = h;
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = "#006EB6"; ctx.fillRect(0, 0, w, 10);
+  ctx.fillStyle = "#0A3D6B"; ctx.textAlign = "center";
+  ctx.font = "800 26px Manrope, Arial, sans-serif"; ctx.fillText("ASSIST BUSINESS CONSULTANCY", w / 2, 58);
+  ctx.drawImage(src || img, pad + 20, 85, w - 2 * (pad + 20), w - 2 * (pad + 20));
+  ctx.font = "800 34px Manrope, Arial, sans-serif"; ctx.fillStyle = "#006EB6";
+  ctx.fillText("Rs. " + amount.toLocaleString("en-IN", {minimumFractionDigits: 2}), w / 2, h - 80);
+  ctx.font = "600 18px Manrope, Arial, sans-serif"; ctx.fillStyle = "#4A5A6A";
+  ctx.fillText(CONFIG.upiId, w / 2, h - 44);
+  c.toBlob(function(blob){
+    var f = new File([blob], "Assist_Pay_QR.png", {type: "image/png"});
+    downloadFile(f); toast("QR saved — open your UPI app and choose Scan from gallery"); armReturn();
+  }, "image/png");
+});
+
 document.addEventListener("visibilitychange", function(){
-  if (document.visibilityState === "visible" && startedPayAt && !receipt && Date.now() - startedPayAt > 2500) {
-    hideLoader(); show($("askSheet"));
+  if (document.visibilityState === "visible" && startedPayAt && !receipt && Date.now() - startedPayAt > 4000) {
+    show($("askSheet"));
   }
 });
-$("finished").addEventListener("click", function(){ show($("askSheet")); });
-$("bankDone").addEventListener("click", function(){ paidVia = "Bank transfer / UPI"; show($("askSheet")); });
+$("paidBtn").addEventListener("click", function(){ paidVia = "UPI"; show($("askSheet")); });
+$("bankDone").addEventListener("click", function(){ paidVia = "Bank transfer"; show($("askSheet")); });
 $("later").addEventListener("click", function(){ hide($("askSheet")); startedPayAt = 0; });
 
 /* ---------------- Success ---------------- */
@@ -651,8 +726,8 @@ $("retry").addEventListener("click", function(){ hide($("failure")); $("payView"
 document.querySelectorAll(".copy").forEach(function(b){
   b.addEventListener("click", function(){
     var v = {upi: CONFIG.upiId, mob: CONFIG.upiMobile, acc: CONFIG.accountNo, ifsc: CONFIG.ifsc}[b.dataset.copy] || "";
-    (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(function(){ toast("Copied"); })
-      .catch(function(){ prompt("Copy:", v); });
+    copyText(v, "Copied");
+    if (b.dataset.copy === "upi" || b.dataset.copy === "mob") armReturn();
   });
 });
 
