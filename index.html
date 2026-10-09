@@ -357,7 +357,13 @@ var CONFIG = {
 
   // ---- Optional: automatic alert to your WhatsApp (free, CallMeBot) ----
   // Leave empty to switch off. See HOW_TO_PUBLISH.txt for the 2-minute setup.
-  callmebotKey: ""
+  callmebotKey: "",
+
+  // ---- Merchant details, copied from your official GPay Business QR ----
+  // Sent with every payment so apps treat it as a business (merchant) payment.
+  merchantCode: "7392",
+  merchantAid:  "uGICAgMDH5K_3SA",
+  merchantTr:   "BCR2DN4T77HI3WLT"
 };
 /* ================================================================== */
 
@@ -441,6 +447,9 @@ if (!(amount > 0)) {
   $("payView").innerHTML = '<div class="error"><p class="section">This payment link is incomplete.</p><p class="hint">Please contact Assist Business Consultancy for the correct link.<br>UPI ID: ' + CONFIG.upiId + '</p></div>';
 } else {
   var params = "pa=" + encodeURIComponent(CONFIG.upiId).replace(/%40/g, "@") + "&pn=" + encodeURIComponent(CONFIG.payeeName) +
+               (CONFIG.merchantCode ? "&mc=" + CONFIG.merchantCode : "") +
+               (CONFIG.merchantAid  ? "&aid=" + encodeURIComponent(CONFIG.merchantAid) + "&ver=01&mode=01" : "") +
+               (CONFIG.merchantTr   ? "&tr=" + encodeURIComponent(CONFIG.merchantTr) : "") +
                "&am=" + amount.toFixed(2) + "&cu=INR&tn=" + encodeURIComponent(("Fee - " + (who || "Client")).slice(0, 40));
   var upi = "upi://pay?" + params;
   $("amount").textContent = inr(amount);
