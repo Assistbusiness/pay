@@ -78,6 +78,14 @@
   .app-ico.has-icon .ico{display:block}
   .app-ico.has-icon em{display:none}
   .app-ico em{font-style:normal;background:var(--light);padding:4px 8px;border-radius:8px}
+  .apps-t{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+  .appgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 6px;margin-top:4px}
+  .apptile{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:6px 2px;cursor:pointer;
+           font:600 11px/1.2 inherit;color:var(--dark);text-align:center;border-radius:12px;transition:transform .12s,background .2s}
+  .apptile:active{transform:scale(.92);background:var(--light)}
+  .apptile .tile{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+                 background:var(--light);border:1px solid var(--line);color:var(--blue-d);font-weight:800;font-size:17px;letter-spacing:.02em}
+  .apptile .tile img{width:100%;height:100%;object-fit:contain;display:block}
   .alt{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:0 14px}
   .alt summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:700;color:var(--blue-d);font-size:14px;display:flex;justify-content:space-between;align-items:center}
   .alt summary::-webkit-details-marker{display:none}
@@ -225,12 +233,8 @@
             <span class="muted">Open GPay, PhonePe, Paytm or your bank app → <b>Pay to UPI ID / mobile</b> → paste the amount.</span>
             <div class="row"><span>UPI ID</span><b id="upiText"></b><button class="copy" type="button" data-copy="upi">Copy</button></div>
             <div class="row" id="mobRow"><span>Mobile number (UPI)</span><b id="upiMob"></b><button class="copy" type="button" data-copy="mob">Copy</button></div>
-            <div class="works">
-              <span class="works-t">Works with</span>
-              <span class="app-ico"><img class="ico" alt="Google Pay" data-src="icons/gpay.png"><em>GPay</em></span>
-              <span class="app-ico"><img class="ico" alt="PhonePe" data-src="icons/phonepe.png"><em>PhonePe</em></span>
-              <span class="app-ico"><img class="ico" alt="Paytm" data-src="icons/paytm.png"><em>Paytm</em></span>
-            </div>
+            <p class="apps-t">Tap your app — the amount is copied for you, just paste it:</p>
+            <div class="appgrid" id="appGrid"></div>
           </div>
         </div>
 
@@ -417,7 +421,23 @@ var CONFIG = {
   // Sent with every payment so apps treat it as a business (merchant) payment.
   merchantCode: "7392",
   merchantAid:  "uGICAgMDH5K_3SA",
-  merchantTr:   "BCR2DN4T77HI3WLT"
+  merchantTr:   "BCR2DN4T77HI3WLT",
+
+  // ---- Payment app buttons (they only OPEN the app; the amount is copied automatically) ----
+  // icon: put the official logo at icons/<key>.png (square). Missing icon = initials tile.
+  // android: app package name (find it in the Play Store link: ...details?id=PACKAGE)
+  // ios: the app's URL scheme;  store: where to go if the app isn't installed
+  apps: [
+    {key: "gpay",       name: "Google Pay", initials: "GP", android: "com.google.android.apps.nbu.paisa.user", ios: "tez://"},
+    {key: "phonepe",    name: "PhonePe",    initials: "Pe", android: "com.phonepe.app",                         ios: "phonepe://"},
+    {key: "paytm",      name: "Paytm",      initials: "Pt", android: "net.one97.paytm",                         ios: "paytmmp://"},
+    {key: "whatsapp",   name: "WhatsApp",   initials: "WA", android: "com.whatsapp",                            ios: "whatsapp://"},
+    {key: "supermoney", name: "super.money",initials: "s.m", android: "money.super.payments",                   ios: "",
+     iosStore: "https://apps.apple.com/in/app/id6502597504", androidStore: "https://play.google.com/store/search?q=super.money&c=apps"},
+    {key: "bhim",       name: "BHIM",       initials: "BH", android: "in.org.npci.upiapp",                      ios: "bhim://"},
+    {key: "amazonpay",  name: "Amazon Pay", initials: "AP", android: "in.amazon.mShop.android.shopping",        ios: "com.amazon.mobile.shopping://"},
+    {key: "cred",       name: "CRED",       initials: "CR", android: "com.dreamplug.androidapp",                ios: ""}
+  ]
 };
 /* ================================================================== */
 
@@ -492,9 +512,57 @@ $("ifsc").textContent = CONFIG.ifsc; $("bank").textContent = CONFIG.bank;
 if (!CONFIG.accountNo) $("bankBlock").style.display = "none";
 
 // Real app icons: shown when icons/gpay.png etc. are uploaded
-document.querySelectorAll(".app-ico .ico").forEach(function(img){
-  img.onload = function(){ img.parentNode.classList.add("has-icon"); };
-  img.src = img.dataset.src;
+/* ---------------- Payment app buttons: copy amount, then just open the app ---------------- */
+var UA = navigator.userAgent || "";
+var IS_ANDROID = /android/i.test(UA), IS_IOS = /iphone|ipad|ipod/i.test(UA);
+
+function androidLink(app){
+  var fallback = app.androidStore || ("https://play.google.com/store/apps/details?id=" + app.android);
+  return "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;" +
+         "package=" + app.android + ";S.browser_fallback_url=" + encodeURIComponent(fallback) + ";end";
+}
+
+function openApp(app){
+  if (IS_ANDROID) {
+    location.href = androidLink(app);
+  } else if (IS_IOS) {
+    if (app.ios) {
+      var t = Date.now();
+      location.href = app.ios;
+      setTimeout(function(){          // still here after 1.5 s → app probably not installed
+        if (document.visibilityState === "visible" && Date.now() - t < 2500)
+          toast(app.name + " didn't open — is it installed?");
+      }, 1500);
+    } else if (app.iosStore) {
+      location.href = app.iosStore;
+    } else {
+      toast("Open " + app.name + " from your home screen and paste the amount");
+    }
+  } else {
+    toast("Open " + app.name + " on your phone, or scan the QR code below");
+  }
+}
+
+(CONFIG.apps || []).forEach(function(app){
+  var b = document.createElement("button");
+  b.type = "button"; b.className = "apptile"; b.setAttribute("aria-label", "Open " + app.name);
+  var tile = document.createElement("span"); tile.className = "tile"; tile.textContent = app.initials || app.name.slice(0, 2);
+  var label = document.createElement("span"); label.textContent = app.name;
+  b.appendChild(tile); b.appendChild(label);
+  var img = new Image(); img.alt = "";
+  img.onload = function(){ tile.textContent = ""; tile.appendChild(img); tile.style.background = "#fff"; };
+  img.src = "icons/" + app.key + ".png";
+  b.addEventListener("click", function(){
+    if (amount > 0) {
+      var v = amount.toFixed(2);
+      if (navigator.clipboard) navigator.clipboard.writeText(v).catch(function(){});
+      $("copyAmt").classList.add("done"); $("copyAmtText").textContent = "Copied ✓ " + inr(amount);
+    }
+    toast("Amount copied — paste it in " + app.name);
+    armReturn();
+    setTimeout(function(){ openApp(app); }, 350);
+  });
+  $("appGrid").appendChild(b);
 });
 
 if (!(amount > 0)) {

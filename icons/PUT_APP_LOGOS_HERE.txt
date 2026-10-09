@@ -1,11 +1,19 @@
-Put the official app logos in this folder with EXACTLY these names:
+Put the official app icons in this folder with EXACTLY these names (square PNG works best):
 
-    gpay.png      (Google Pay logo)
-    phonepe.png   (PhonePe logo)
-    paytm.png     (Paytm logo)
+    gpay.png         Google Pay
+    phonepe.png      PhonePe
+    paytm.png        Paytm
+    whatsapp.png     WhatsApp
+    supermoney.png   super.money
+    bhim.png         BHIM
+    amazonpay.png    Amazon Pay
+    cred.png         CRED
 
-- PNG with a transparent or white background works best (wide logos are fine).
-- Download them from each company's official brand / press page.
-- If a file is missing, that button simply shows the app's name instead.
+- Download each from the company's official brand / press page.
+- Missing file = that button shows the app's initials instead (still works).
+- Upload this whole "icons" folder to GitHub with index.html.
 
-Upload this whole "icons" folder to GitHub along with index.html and logo.png.
+Add / remove apps: in index.html, find "apps: [" in the CONFIG block and add or delete a line.
+  key      = icon file name (without .png)
+  android  = package name, from the Play Store link: play.google.com/store/apps/details?id=PACKAGE
+  ios      = the app's link scheme (leave "" if unknown – the button then gives a helpful message)
