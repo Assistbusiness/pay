@@ -83,8 +83,10 @@
   .apptile{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:6px 2px;cursor:pointer;
            font:600 11px/1.2 inherit;color:var(--dark);text-align:center;border-radius:12px;transition:transform .12s,background .2s}
   .apptile:active{transform:scale(.92);background:var(--light)}
-  .apptile .tile{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;overflow:hidden;
-                 background:var(--light);border:1px solid var(--line);color:var(--blue-d);font-weight:800;font-size:17px;letter-spacing:.02em}
+  .apptile .tile{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+                 background:linear-gradient(140deg,#0A88D8 0%,#006EB6 55%,#0A3D6B 100%);color:#fff;font-weight:800;font-size:16px;
+                 letter-spacing:.03em;box-shadow:0 4px 10px rgba(0,110,182,.28),inset 0 1px 0 rgba(255,255,255,.25)}
+  .apptile .tile.has-img{background:#fff;box-shadow:0 2px 8px rgba(10,61,107,.15);border:1px solid var(--line)}
   .apptile .tile img{width:100%;height:100%;object-fit:contain;display:block}
   .alt{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:0 14px}
   .alt summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:700;color:var(--blue-d);font-size:14px;display:flex;justify-content:space-between;align-items:center}
@@ -233,8 +235,11 @@
             <span class="muted">Open GPay, PhonePe, Paytm or your bank app → <b>Pay to UPI ID / mobile</b> → paste the amount.</span>
             <div class="row"><span>UPI ID</span><b id="upiText"></b><button class="copy" type="button" data-copy="upi">Copy</button></div>
             <div class="row" id="mobRow"><span>Mobile number (UPI)</span><b id="upiMob"></b><button class="copy" type="button" data-copy="mob">Copy</button></div>
-            <p class="apps-t">Tap your app — the amount is copied for you, just paste it:</p>
-            <div class="appgrid" id="appGrid"></div>
+            <button class="btn btn-blue" id="payApps" type="button" style="margin-top:6px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+              Pay by apps</button>
+            <p class="apps-t" id="payAppsHint">Shows all the payment apps on your phone. The amount is copied — pick your app,
+              choose <b>Pay to UPI ID / mobile</b>, enter <b id="hintUpi"></b> and paste the amount.</p>
           </div>
         </div>
 
@@ -364,15 +369,26 @@ var CONFIG = {
   // open: the app's own link that browsers are allowed to open (no payment details inside).
   //       Leave "" if the app has no such link – the button then copies the amount and asks
   //       the client to open the app from their home screen.
+  // android: links tried one after another until the app opens (no payment details inside).
+  // ios:     the app's link on iPhone.  Empty = button copies the amount and asks the client
+  //          to open the app from their home screen.
   apps: [
-    {key: "gpay",       name: "Google Pay",  initials: "GP",  open: "tez://upi/"},
-    {key: "phonepe",    name: "PhonePe",     initials: "Pe",  open: "phonepe://"},
-    {key: "paytm",      name: "Paytm",       initials: "Pt",  open: "paytmmp://"},
-    {key: "whatsapp",   name: "WhatsApp",    initials: "WA",  open: "https://wa.me/918848838112"},
-    {key: "cred",       name: "CRED",        initials: "CR",  open: "credpay://"},
-    {key: "bhim",       name: "BHIM",        initials: "BH",  open: ""},
-    {key: "supermoney", name: "super.money", initials: "s.m", open: ""},
-    {key: "amazonpay",  name: "Amazon Pay",  initials: "AP",  open: ""}
+    {key: "gpay",       name: "Google Pay",  initials: "GP",
+     android: ["tez://upi/"], ios: "tez://upi/"},
+    {key: "phonepe",    name: "PhonePe",     initials: "Pe",
+     android: ["phonepe://native", "intent://pay#Intent;scheme=upi;package=com.phonepe.app;end"], ios: "phonepe://"},
+    {key: "paytm",      name: "Paytm",       initials: "Pt",
+     android: ["paytmmp://cash_wallet?featuretype=money_transfer", "intent://pay#Intent;scheme=upi;package=net.one97.paytm;end"], ios: "paytmmp://"},
+    {key: "whatsapp",   name: "WhatsApp",    initials: "WA",
+     android: ["whatsapp://send?phone=918848838112", "https://wa.me/918848838112"], ios: "whatsapp://send?phone=918848838112"},
+    {key: "cred",       name: "CRED",        initials: "CR",
+     android: ["credpay://", "intent://pay#Intent;scheme=upi;package=com.dreamplug.androidapp;end"], ios: "credpay://"},
+    {key: "bhim",       name: "BHIM",        initials: "BH",
+     android: ["intent://pay#Intent;scheme=upi;package=in.org.npci.upiapp;end"], ios: ""},
+    {key: "amazonpay",  name: "Amazon Pay",  initials: "AP",
+     android: ["intent://pay#Intent;scheme=upi;package=in.amazon.mShop.android.shopping;end"], ios: ""},
+    {key: "supermoney", name: "super.money", initials: "s.m",
+     android: [], ios: ""}
   ]
 };
 /* ================================================================== */
@@ -453,42 +469,52 @@ var UA = navigator.userAgent || "";
 var IS_ANDROID = /android/i.test(UA), IS_IOS = /iphone|ipad|ipod/i.test(UA);
 
 function openApp(app){
-  if (!app.open) {
-    toast("Amount copied — open " + app.name + " from your home screen and paste it");
-    return;
-  }
-  if (!IS_ANDROID && !IS_IOS && app.key !== "whatsapp") {
+  var links = IS_ANDROID ? (app.android || []) : IS_IOS ? (app.ios ? [app.ios] : []) : [];
+  if (!IS_ANDROID && !IS_IOS) {
     toast("Open " + app.name + " on your phone, or scan the QR code below");
     return;
   }
-  var t = Date.now();
-  location.href = app.open;
-  setTimeout(function(){            // still on this page → the app didn't open
-    if (document.visibilityState === "visible" && Date.now() - t < 3000)
+  if (!links.length) {
+    toast("Amount copied — open " + app.name + " from your home screen and paste it");
+    return;
+  }
+  var i = 0, left = false;
+  function onHide(){ if (document.visibilityState === "hidden") left = true; }
+  document.addEventListener("visibilitychange", onHide);
+  (function next(){
+    if (left) { document.removeEventListener("visibilitychange", onHide); return; }
+    if (i >= links.length) {
+      document.removeEventListener("visibilitychange", onHide);
       toast("Couldn't open " + app.name + " — open it from your home screen, the amount is copied");
-  }, 1800);
+      return;
+    }
+    location.href = links[i++];
+    setTimeout(next, 1100);       // still here → try the next link format
+  })();
 }
 
-(CONFIG.apps || []).forEach(function(app){
-  var b = document.createElement("button");
-  b.type = "button"; b.className = "apptile"; b.setAttribute("aria-label", "Open " + app.name);
-  var tile = document.createElement("span"); tile.className = "tile"; tile.textContent = app.initials || app.name.slice(0, 2);
-  var label = document.createElement("span"); label.textContent = app.name;
-  b.appendChild(tile); b.appendChild(label);
-  var img = new Image(); img.alt = "";
-  img.onload = function(){ tile.textContent = ""; tile.appendChild(img); tile.style.background = "#fff"; };
-  img.src = "icons/" + app.key + ".png";
-  b.addEventListener("click", function(){
-    if (amount > 0) {
-      var v = amount.toFixed(2);
-      if (navigator.clipboard) navigator.clipboard.writeText(v).catch(function(){});
-      $("copyAmt").classList.add("done"); $("copyAmtText").textContent = "Copied ✓ " + inr(amount);
-    }
-    toast("Amount copied — paste it in " + app.name);
-    armReturn();
-    setTimeout(function(){ openApp(app); }, 350);
-  });
-  $("appGrid").appendChild(b);
+/* "Pay by apps": Android shows its own list of every UPI app installed (with their icons). */
+$("hintUpi").textContent = CONFIG.upiId;
+$("payApps").addEventListener("click", function(){
+  if (amount > 0) {
+    if (navigator.clipboard) navigator.clipboard.writeText(amount.toFixed(2)).catch(function(){});
+    $("copyAmt").classList.add("done"); $("copyAmtText").textContent = "Copied ✓ " + inr(amount);
+  }
+  armReturn();
+  if (IS_ANDROID) {
+    toast("Amount copied — pick your payment app");
+    var t = Date.now();
+    setTimeout(function(){ location.href = "upi://pay"; }, 300);
+    setTimeout(function(){
+      if (document.visibilityState === "visible" && Date.now() - t < 3500)
+        toast("No UPI app opened — open your payment app from the home screen, the amount is copied");
+    }, 2500);
+  } else if (IS_IOS) {
+    toast("Amount copied — open your payment app (GPay, PhonePe, Paytm…) and pay to " + CONFIG.upiId);
+  } else {
+    toast("On a computer: scan the QR code below with your phone");
+    $("qrAlt").open = true;
+  }
 });
 
 if (!(amount > 0)) {
