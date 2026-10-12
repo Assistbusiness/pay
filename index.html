@@ -241,8 +241,8 @@
         <div class="step">
           <div class="num">3</div>
           <div class="step-body">
-            <b>Come back and get your receipt</b>
-            <button class="btn btn-out" id="paidBtn" type="button">I've paid — get my receipt</button>
+            <b>Come back and let us know</b>
+            <button class="btn btn-out" id="paidBtn" type="button">I've paid — inform Assist</button>
           </div>
         </div>
 
@@ -273,35 +273,23 @@
       <div class="badge"><svg viewBox="0 0 100 100" fill="none" stroke-linecap="round" stroke-linejoin="round">
         <circle class="ring" cx="50" cy="50" r="45" stroke="#15803D" stroke-width="7"/>
         <path class="mark" d="M30 52 L44 66 L71 37" stroke="#15803D" stroke-width="8"/></svg></div>
-      <h2>Payment Successful</h2>
-      <p class="sub" id="okSub">Thank you. Your receipt is ready.</p>
+      <h2>Thank you!</h2>
+      <p class="sub">Please let us know on WhatsApp so we can update your account.</p>
 
       <div class="summary">
-        <div class="row"><span>Receipt No.</span><b id="sNo"></b></div>
+        <div class="row"><span>Paid by</span><b id="sName"></b></div>
         <div class="row"><span>Amount</span><b id="sAmt"></b></div>
-        <div class="row"><span>UPI Ref No.</span><b id="sUtr">—</b></div>
-        <div class="row"><span>Date</span><b id="sDate"></b></div>
+        <div class="row"><span>Paid on</span><b id="sDate"></b></div>
       </div>
 
-      <label class="field" for="utr">UPI Ref / Transaction ID (optional — shown on your receipt)</label>
+      <label class="field" for="utr">UPI Ref / Transaction ID (optional)</label>
       <input class="input" id="utr" inputmode="numeric" autocomplete="off" placeholder="e.g. 428713559012">
 
-      <div class="stack">
-        <button class="btn btn-blue" id="dlBtn" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>
-          Download Receipt (PDF)</button>
-        <button class="btn btn-out" id="shareBtn" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4"/><path d="M8.2 13.2l7.6 4.4"/></svg>
-          Share Receipt</button>
-      </div>
-
-      <button class="pill todo" id="notifyTodo" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/></svg>
-        Tap to send confirmation to Assist on WhatsApp</button>
-      <div class="pill done" id="notifyDone" style="display:none">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
-        Assist has been notified on WhatsApp</div>
-      <button class="btn btn-text" id="backOk" type="button" style="margin-top:8px">Back to payment page</button>
+      <a class="btn btn-wa" id="sendWa" href="#" target="_blank" rel="noopener">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/><path d="M9 11.5l2 2 4-4"/></svg>
+        Inform Assist on WhatsApp</a>
+      <p class="note" style="text-align:center">Tip: attach your payment screenshot in WhatsApp too.</p>
+      <button class="btn btn-text" id="backOk" type="button" style="margin-top:4px">Back to payment page</button>
     </div>
 
     <!-- ============ FAILURE ============ -->
@@ -332,63 +320,9 @@
   </div>
 </div></div>
 
-<!-- ============ NOTIFY ASSIST ============ -->
-<div class="sheet" id="notifySheet"><div class="sheet-box">
-  <div class="grab"></div>
-  <div style="display:flex;justify-content:center;margin-bottom:8px">
-    <div class="assist" style="width:92px"><img src="brand/a1.png" alt="" style="left:1.494%;width:20.168%;opacity:1"><img src="brand/a2.png" alt="" style="left:21.569%;width:17.367%;opacity:1"><img src="brand/a3.png" alt="" style="left:39.029%;width:17.460%;opacity:1"><img src="brand/a4.png" alt="" style="left:57.796%;width:4.202%;opacity:1"><img src="brand/a5.png" alt="" style="left:63.399%;width:17.460%;opacity:1"><img src="brand/a6.png" alt="" style="left:80.392%;width:17.554%;opacity:1"></div>
-  </div>
-  <h3>Send confirmation to Assist</h3>
-  <p class="sub">So we can update your account straight away.</p>
-  <div class="preview">
-    <div class="cap">Message preview</div>
-    <div class="bubble" id="msgPreview"></div>
-    <div class="file"><div class="pdf-ico">PDF</div><div><b id="pdfName">Assist_Receipt.pdf</b><small>1 page · attached</small></div></div>
-  </div>
-  <div class="stack">
-    <button class="btn btn-wa" id="sendWa" type="button">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-13.4 7.9L3 21l1.2-4.4A9 9 0 1 1 21 12z"/><path d="M9 11.5l2 2 4-4"/></svg>
-      Send on WhatsApp</button>
-    <a class="btn btn-text" id="textOnly" href="#" target="_blank" rel="noopener">Send message only (no PDF)</a>
-  </div>
-  <p class="hint" id="sendHint">Choose <b>WhatsApp</b> → <b>Assist</b> chat, then tap Send.</p>
-</div></div>
-
-<!-- ============ RECEIPT TEMPLATE (for PDF) ============ -->
-<div id="receipt" aria-hidden="true">
-  <div class="r-top"></div>
-  <div class="r-head">
-    <img src="logo.png" alt="">
-    <div class="r-co">
-      <div class="n" id="rcName"></div>
-      <div id="rcAddr"></div>
-      <div id="rcPhones"></div>
-      <div id="rcWeb"></div>
-      <div id="rcGst"></div>
-    </div>
-  </div>
-  <div class="r-title">
-    <div><h1>PAYMENT RECEIPT</h1><p>Acknowledgement of payment received</p></div>
-    <div class="r-meta"><span>Receipt No.</span><b id="rNo"></b><span>Date</span><b id="rDate"></b></div>
-  </div>
-  <div class="r-boxes">
-    <div class="r-box"><div class="k">RECEIVED FROM</div><div class="big" id="rClient"></div><div id="rMob"></div><div id="rCgst"></div></div>
-    <div class="r-box"><div class="k">PAYMENT DETAILS</div><div>Mode: <b id="rMode">UPI</b></div><div id="rUtrLine">UPI Ref No.: <b id="rUtr"></b></div><div>Paid to: <b id="rTo"></b></div><div>Paid on: <b id="rOn"></b></div></div>
-  </div>
-  <div class="r-table" id="rTable"></div>
-  <div class="r-words"><span>Amount in words:</span> <b id="rWords"></b></div>
-  <div class="r-paid">
-    <div class="stamp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>PAID</div>
-    <div class="r-note">Subject to realisation in our account.<br>This is a computer-generated receipt and does not need a signature.</div>
-  </div>
-  <div class="r-foot"><img src="brand/assist-white.png" alt=""><div>ACCOUNTING | TAXATION | COMPLIANCE | ADVISORY</div></div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* ==================================================================
    EDIT ONLY THIS BLOCK — your details.
@@ -427,16 +361,18 @@ var CONFIG = {
   // icon: put the official logo at icons/<key>.png (square). Missing icon = initials tile.
   // android: app package name (find it in the Play Store link: ...details?id=PACKAGE)
   // ios: the app's URL scheme;  store: where to go if the app isn't installed
+  // open: the app's own link that browsers are allowed to open (no payment details inside).
+  //       Leave "" if the app has no such link – the button then copies the amount and asks
+  //       the client to open the app from their home screen.
   apps: [
-    {key: "gpay",       name: "Google Pay", initials: "GP", android: "com.google.android.apps.nbu.paisa.user", ios: "tez://"},
-    {key: "phonepe",    name: "PhonePe",    initials: "Pe", android: "com.phonepe.app",                         ios: "phonepe://"},
-    {key: "paytm",      name: "Paytm",      initials: "Pt", android: "net.one97.paytm",                         ios: "paytmmp://"},
-    {key: "whatsapp",   name: "WhatsApp",   initials: "WA", android: "com.whatsapp",                            ios: "whatsapp://"},
-    {key: "supermoney", name: "super.money",initials: "s.m", android: "money.super.payments",                   ios: "",
-     iosStore: "https://apps.apple.com/in/app/id6502597504", androidStore: "https://play.google.com/store/search?q=super.money&c=apps"},
-    {key: "bhim",       name: "BHIM",       initials: "BH", android: "in.org.npci.upiapp",                      ios: "bhim://"},
-    {key: "amazonpay",  name: "Amazon Pay", initials: "AP", android: "in.amazon.mShop.android.shopping",        ios: "com.amazon.mobile.shopping://"},
-    {key: "cred",       name: "CRED",       initials: "CR", android: "com.dreamplug.androidapp",                ios: ""}
+    {key: "gpay",       name: "Google Pay",  initials: "GP",  open: "tez://upi/"},
+    {key: "phonepe",    name: "PhonePe",     initials: "Pe",  open: "phonepe://"},
+    {key: "paytm",      name: "Paytm",       initials: "Pt",  open: "paytmmp://"},
+    {key: "whatsapp",   name: "WhatsApp",    initials: "WA",  open: "https://wa.me/918848838112"},
+    {key: "cred",       name: "CRED",        initials: "CR",  open: "credpay://"},
+    {key: "bhim",       name: "BHIM",        initials: "BH",  open: ""},
+    {key: "supermoney", name: "super.money", initials: "s.m", open: ""},
+    {key: "amazonpay",  name: "Amazon Pay",  initials: "AP",  open: ""}
   ]
 };
 /* ================================================================== */
@@ -516,31 +452,21 @@ if (!CONFIG.accountNo) $("bankBlock").style.display = "none";
 var UA = navigator.userAgent || "";
 var IS_ANDROID = /android/i.test(UA), IS_IOS = /iphone|ipad|ipod/i.test(UA);
 
-function androidLink(app){
-  var fallback = app.androidStore || ("https://play.google.com/store/apps/details?id=" + app.android);
-  return "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;" +
-         "package=" + app.android + ";S.browser_fallback_url=" + encodeURIComponent(fallback) + ";end";
-}
-
 function openApp(app){
-  if (IS_ANDROID) {
-    location.href = androidLink(app);
-  } else if (IS_IOS) {
-    if (app.ios) {
-      var t = Date.now();
-      location.href = app.ios;
-      setTimeout(function(){          // still here after 1.5 s → app probably not installed
-        if (document.visibilityState === "visible" && Date.now() - t < 2500)
-          toast(app.name + " didn't open — is it installed?");
-      }, 1500);
-    } else if (app.iosStore) {
-      location.href = app.iosStore;
-    } else {
-      toast("Open " + app.name + " from your home screen and paste the amount");
-    }
-  } else {
-    toast("Open " + app.name + " on your phone, or scan the QR code below");
+  if (!app.open) {
+    toast("Amount copied — open " + app.name + " from your home screen and paste it");
+    return;
   }
+  if (!IS_ANDROID && !IS_IOS && app.key !== "whatsapp") {
+    toast("Open " + app.name + " on your phone, or scan the QR code below");
+    return;
+  }
+  var t = Date.now();
+  location.href = app.open;
+  setTimeout(function(){            // still on this page → the app didn't open
+    if (document.visibilityState === "visible" && Date.now() - t < 3000)
+      toast("Couldn't open " + app.name + " — open it from your home screen, the amount is copied");
+  }, 1800);
 }
 
 (CONFIG.apps || []).forEach(function(app){
@@ -624,162 +550,40 @@ $("paidBtn").addEventListener("click", function(){ paidVia = "UPI"; show($("askS
 $("bankDone").addEventListener("click", function(){ paidVia = "Bank transfer"; show($("askSheet")); });
 $("later").addEventListener("click", function(){ hide($("askSheet")); startedPayAt = 0; });
 
-/* ---------------- Success ---------------- */
-function makeReceiptNo(d){
-  return CONFIG.receiptPrefix + "/" + p2(d.getDate()) + p2(d.getMonth() + 1) + String(d.getFullYear()).slice(2) + "/" +
-         p2(d.getHours()) + p2(d.getMinutes()) + "-" + p2(Math.floor(Math.random() * 100));
-}
-
+/* ---------------- Success: inform Assist on WhatsApp ---------------- */
+var paidAt = null;
 function messageText(){
   var utr = $("utr").value.trim();
   return "✅ *Payment Done*\n" +
          "Name: " + (who || "-") + "\n" +
          "Amount: " + inr(amount) + "\n" +
+         "Paid on: " + fmtDate(paidAt, true) + "\n" +
+         "Paid via: " + paidVia + "\n" +
          (utr ? "UPI Ref No.: " + utr + "\n" : "") +
-         "Receipt No.: " + receipt.no + "\n" +
-         "Date: " + fmtDate(receipt.date, true) + "\n\n" +
-         "Please update my account. Thank you.";
+         "\nPlease update my account. Thank you.";
 }
+function refreshWa(){ $("sendWa").href = wa(messageText()); }
 
-function fillReceipt(){
-  var utr = $("utr").value.trim();
-  $("rcName").textContent = CONFIG.companyName;
-  $("rcAddr").textContent = CONFIG.address; $("rcAddr").style.display = CONFIG.address ? "" : "none";
-  $("rcPhones").textContent = CONFIG.phones;
-  $("rcWeb").textContent = CONFIG.web;
-  $("rcGst").textContent = CONFIG.gstin ? "GSTIN: " + CONFIG.gstin : ""; $("rcGst").style.display = CONFIG.gstin ? "" : "none";
-  $("rNo").textContent = receipt.no;
-  $("rDate").textContent = fmtDate(receipt.date, false);
-  $("rClient").textContent = who || "Client";
-  $("rMob").textContent = clientMobile ? "Mobile: +91 " + clientMobile.replace(/(\d{5})(\d{5})/, "$1 $2") : "";
-  $("rCgst").textContent = clientGstin ? "GSTIN: " + clientGstin : "";
-  $("rMode").textContent = paidVia;
-  $("rUtr").textContent = utr; $("rUtrLine").style.display = utr ? "" : "none";
-  $("rTo").textContent = CONFIG.upiId;
-  $("rOn").textContent = fmtDate(receipt.date, true);
-  var lines = items.length ? items : [{d: "Professional fees / payment towards account", a: amount}];
-  var html = '<div class="r-tr h"><div>#</div><div>Particulars</div><div>Amount (₹)</div></div>';
-  lines.forEach(function(it, i){
-    html += '<div class="r-tr' + (i % 2 ? " alt" : "") + '"><div>' + (i + 1) + '</div><div></div><div>' + num(it.a) + '</div></div>';
-  });
-  html += '<div class="r-tr t"><div></div><div>Total Amount Received</div><div>' + num(amount) + '</div></div>';
-  $("rTable").innerHTML = html;
-  // descriptions set as text (never as HTML) so link contents can't inject markup
-  var rows = $("rTable").querySelectorAll(".r-tr:not(.h):not(.t)");
-  lines.forEach(function(it, i){ rows[i].children[1].textContent = it.d; });
-  $("rWords").textContent = words(amount);
-}
-
-async function buildPdf(){
-  fillReceipt();
-  if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
-  var canvas = await html2canvas($("receipt"), {scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false,
-                                                 x: 0, y: 0, width: 794, height: 1123, windowWidth: 794,
-                                                 onclone: function(doc){ var r = doc.getElementById("receipt"); r.style.left = "0"; }});
-  var pdf = new window.jspdf.jsPDF({orientation: "p", unit: "pt", format: "a4"});
-  pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 595.28, 841.89);
-  var name = "Assist_Receipt_" + receipt.no.replace(/\//g, "-") + ".pdf";
-  pdfFile = new File([pdf.output("blob")], name, {type: "application/pdf"});
-  pdfUtr = $("utr").value.trim();
-  $("pdfName").textContent = name;
-  return pdfFile;
-}
-
-async function ensurePdf(){
-  if (pdfFile && pdfUtr === $("utr").value.trim()) return pdfFile;
-  showLoader("Preparing your receipt…", true);
-  try { var f = await buildPdf(); await sleep(400); return f; }
-  catch (e) { toast("Could not create the PDF. Please try again."); throw e; }
-  finally { hideLoader(); }
-}
-
-function markNotified(){
-  $("notifyTodo").style.display = "none";
-  $("notifyDone").style.display = "flex";
-}
-
-async function autoAlert(){
-  if (!CONFIG.callmebotKey) return false;
-  try {
-    var url = "https://api.callmebot.com/whatsapp.php?phone=" + CONFIG.whatsapp +
-              "&text=" + encodeURIComponent(messageText() + "\n\n(Auto-alert from payment page)") + "&apikey=" + encodeURIComponent(CONFIG.callmebotKey);
-    await fetch(url, {mode: "no-cors"});
-    return true;
-  } catch (e) { return false; }
-}
-
-$("yes").addEventListener("click", async function(){
+$("yes").addEventListener("click", function(){
   hide($("askSheet"));
-  receipt = {no: makeReceiptNo(new Date()), date: new Date()};
-  $("okSub").textContent = "Thank you" + (who ? ", " + who : "") + ". Your receipt is ready.";
-  $("sNo").textContent = receipt.no;
+  paidAt = new Date(); receipt = true;
+  $("sName").textContent = who || "-";
   $("sAmt").textContent = inr(amount);
-  $("sDate").textContent = fmtDate(receipt.date, true);
-
-  showLoader("Preparing your receipt…", true);
-  try { await buildPdf(); } catch (e) {}
-  await sleep(700);
-  if (CONFIG.callmebotKey) {
-    $("loaderText").textContent = "Notifying Assist…";
-    if (await autoAlert()) markNotified();
-    await sleep(600);
-  }
-  hideLoader();
+  $("sDate").textContent = fmtDate(paidAt, true);
+  refreshWa();
   $("payView").style.display = "none"; hide($("failure")); show($("success"));
   window.scrollTo({top: 0, behavior: "smooth"});
-  setTimeout(openNotify, 900);
 });
-
-$("utr").addEventListener("input", function(){ $("sUtr").textContent = $("utr").value.trim() || "—"; });
-
-function openNotify(){
-  var pv = $("msgPreview"); pv.textContent = "";
-  messageText().split(/(\*[^*]+\*)/).forEach(function(part){
-    if (/^\*[^*]+\*$/.test(part)) { var b = document.createElement("b"); b.textContent = part.slice(1, -1); pv.appendChild(b); }
-    else pv.appendChild(document.createTextNode(part));
-  });
-  $("textOnly").href = wa(messageText());
-  var canFiles = !!(navigator.canShare && pdfFile && navigator.canShare({files: [pdfFile]}));
-  $("sendHint").innerHTML = canFiles ? "Choose <b>WhatsApp</b> → <b>Assist</b> chat, then tap Send."
-                                     : "WhatsApp opens with the message ready — tap Send. Your receipt PDF is saved so you can attach it.";
-  show($("notifySheet"));
-}
-$("notifyTodo").addEventListener("click", openNotify);
-$("notifySheet").addEventListener("click", function(e){ if (e.target === this) hide(this); });
+$("utr").addEventListener("input", refreshWa);
+$("sendWa").addEventListener("click", refreshWa);
 $("askSheet").addEventListener("click", function(e){ if (e.target === this) hide(this); });
-
-$("sendWa").addEventListener("click", async function(){
-  var f;
-  try { f = await ensurePdf(); } catch (e) { return; }
-  var text = messageText();
-  if (navigator.canShare && navigator.canShare({files: [f]})) {
-    try {
-      await navigator.share({files: [f], text: text, title: "Payment confirmation"});
-      hide($("notifySheet")); markNotified(); toast("Thank you! Confirmation sent.");
-      return;
-    } catch (e) { if (e && e.name === "AbortError") return; }
-  }
-  downloadFile(f);
-  window.open(wa(text), "_blank");
-  hide($("notifySheet")); markNotified();
-});
-$("textOnly").addEventListener("click", function(){ $("textOnly").href = wa(messageText()); hide($("notifySheet")); markNotified(); });
 
 function downloadFile(f){
   var u = URL.createObjectURL(f), a = document.createElement("a");
   a.href = u; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(function(){ URL.revokeObjectURL(u); }, 4000);
 }
-$("dlBtn").addEventListener("click", async function(){
-  try { downloadFile(await ensurePdf()); toast("Receipt downloaded"); } catch (e) {}
-});
-$("shareBtn").addEventListener("click", async function(){
-  var f; try { f = await ensurePdf(); } catch (e) { return; }
-  if (navigator.canShare && navigator.canShare({files: [f]})) {
-    try { await navigator.share({files: [f], title: "Payment receipt"}); } catch (e) {}
-  } else { downloadFile(f); toast("Receipt downloaded — share it from your files"); }
-});
-$("backOk").addEventListener("click", function(){ hide($("success")); $("payView").style.display = ""; startedPayAt = 0; });
+$("backOk").addEventListener("click", function(){ hide($("success")); $("payView").style.display = ""; startedPayAt = 0; receipt = null; });
 
 /* ---------------- Failure ---------------- */
 $("no").addEventListener("click", function(){
